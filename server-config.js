@@ -1,8 +1,8 @@
 // Public server presentation data. Verify IP, version and plugins before publishing them.
 window.SERVER_INFO = {
   name: "Minecraft Community",
-  ip: "",
-  port: 25565,
+  ip: "luna.lumine.buzz",
+  port: 25559,
   version: "",
   status: "Chưa kiểm tra",
   description: "Máy chủ Minecraft dành cho cộng đồng xây dựng, khám phá và phát triển công trình. Thành tích Build Points được ghi nhận công khai trên website.",
