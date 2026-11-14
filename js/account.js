@@ -1,7 +1,6 @@
-import { PLAYER_EMAIL_DOMAIN } from "../data/config.js";
+import { LOGIN_NAME, loginEmail } from "./identity.js";
 import { $, openDialog, closeDialog, friendlyError } from "./lib.js";
 
-const NAME_RE = /^[A-Za-z0-9_]{3,16}$/;
 const listeners = new Set();
 const state = { client: null, session: null, profile: null };
 
@@ -24,14 +23,21 @@ export const account = {
   },
 };
 
-const toEmail = (name) => `${name.trim().toLowerCase()}@${PLAYER_EMAIL_DOMAIN}`;
 
 async function loadProfile() {
+  const userId = state.session?.user.id;
   state.profile = null;
-  if (state.client && state.session) {
-    const { data } = await state.client.from("profiles")
-      .select("id,username,is_banned").eq("id", state.session.user.id).maybeSingle();
-    state.profile = data || null;
+  try {
+    if (state.client && userId) {
+      const { data, error } = await state.client.from("profiles")
+        .select("id,username,is_banned").eq("id", userId).maybeSingle();
+      if (state.session?.user.id !== userId) return;
+      state.profile = error ? null : data;
+      if (error || !data) $("accountStatus").textContent = "Chưa tải được hồ sơ. Thử tải lại trang nhé.";
+    }
+  } catch {
+    if (state.session?.user.id !== userId) return;
+    $("accountStatus").textContent = "Chưa tải được hồ sơ. Thử tải lại trang nhé.";
   }
   renderButton();
   listeners.forEach((fn) => fn(account));
@@ -42,7 +48,7 @@ function renderButton() {
   button.textContent = state.profile ? state.profile.username : state.session ? "Tài khoản" : "Đăng nhập";
   $("accountSignedOut").classList.toggle("hide", Boolean(state.session));
   $("accountSignedIn").classList.toggle("hide", !state.session);
-  $("accountName").textContent = state.profile?.username || state.session?.user?.email || "";
+  $("accountName").textContent = state.profile?.username || (state.session ? "Đang tải hồ sơ…" : "");
 }
 
 let mode = "login";
@@ -83,8 +89,8 @@ export function initAccount(client) {
       if (field) { field.setAttribute("aria-invalid", "true"); field.focus(); }
     };
     if (!state.client) return fail("Chưa kết nối được máy chủ dữ liệu.");
-    if (!NAME_RE.test(name)) return fail("Tên Minecraft cần 3 đến 16 ký tự: chữ, số hoặc dấu gạch dưới.", $("accName"));
-    if (pass.length < 8) return fail("Mật khẩu cần ít nhất 8 ký tự.", $("accPass"));
+    if (!LOGIN_NAME.test(name)) return fail("Tên đăng nhập cần 3 đến 16 ký tự: chữ, số hoặc dấu gạch dưới.", $("accName"));
+    if (!pass || (mode === "register" && pass.length < 8)) return fail("Mật khẩu mới cần ít nhất 8 ký tự.", $("accPass"));
     if (mode === "register" && pass !== $("accPass2").value) return fail("Hai mật khẩu chưa giống nhau.", $("accPass2"));
 
     const button = $("accountSubmit");
@@ -93,13 +99,13 @@ export function initAccount(client) {
     try {
       if (mode === "register") {
         const { data, error } = await state.client.auth.signUp({
-          email: toEmail(name), password: pass, options: { data: { username: name } },
+          email: loginEmail(name), password: pass, options: { data: { username: name } },
         });
         if (error) return fail(friendlyError(error));
         // With "Confirm email" ON, Supabase returns no session and the fake address gets no mail.
         if (!data.session) return fail("Đã tạo tài khoản nhưng chưa dùng được: admin cần tắt \"Confirm email\" trong Supabase.");
       } else {
-        const { error } = await state.client.auth.signInWithPassword({ email: toEmail(name), password: pass });
+        const { error } = await state.client.auth.signInWithPassword({ email: loginEmail(name), password: pass });
         if (error) return fail(friendlyError(error), $("accPass"));
       }
       $("accountForm").reset();
@@ -112,8 +118,11 @@ export function initAccount(client) {
   });
 
   $("signOut").addEventListener("click", async () => {
-    await state.client?.auth.signOut();
-    closeDialog("accountDialog");
+    try {
+      const result = await state.client?.auth.signOut();
+      if (result?.error) throw result.error;
+      closeDialog("accountDialog");
+    } catch (error) { $("accountStatus").textContent = friendlyError(error); }
   });
 
   if (!client) { renderButton(); return; }

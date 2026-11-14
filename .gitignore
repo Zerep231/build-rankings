@@ -17,3 +17,9 @@
 *.log
 Thumbs.db
 .DS_Store
+
+# Local test kit (fake Supabase in the browser): never deploy.
+/_test/
+/.plugin-work/
+/backend/
+/CODEX.md

@@ -1,6 +1,7 @@
 import { $, escapeHTML, avatar, relativeTime, openDialog, closeDialog, friendlyError, isMissingTable, emptyText } from "./lib.js";
 import { account } from "./account.js";
 import { namesFor } from "./profiles.js";
+import { threadHTML, initTicketThreads } from "./ticket-thread.js";
 
 const STATUS = { new: "Mới", in_progress: "Đang xử lý", done: "Đã xong", rejected: "Không thực hiện" };
 const KIND = { bug: "Báo lỗi", suggestion: "Đề xuất" };
@@ -44,7 +45,8 @@ function render() {
           </div>
           <h3>${escapeHTML(t.title)}</h3>
           <p class="ticket-body">${escapeHTML(t.body)}</p>
-          ${t.admin_reply ? `<div class="reply"><b>Admin trả lời:</b><p class="ticket-body" style="margin:0">${escapeHTML(t.admin_reply)}</p></div>` : ""}
+          ${t.admin_reply ? `<div class="reply" data-legacy-reply><b>Admin trả lời:</b><p class="ticket-body" style="margin:0">${escapeHTML(t.admin_reply)}</p></div>` : ""}
+          ${threadHTML(t.id)}
           ${t.user_id === me ? `<button class="text-link" type="button" data-delete-ticket="${escapeHTML(t.id)}">Xóa góp ý của tôi</button>` : ""}
         </div>
       </article>`;
@@ -54,6 +56,7 @@ function render() {
 
 async function load() {
   if (!client) { loadError = "no client"; render(); return; }
+  try {
   const { data, error } = await client.from("tickets")
     .select("id,user_id,kind,title,body,is_private,status,admin_reply,vote_count,created_at")
     .order("created_at", { ascending: false }).limit(300);
@@ -66,6 +69,7 @@ async function load() {
   }
   nameOf = await namesFor(client, tickets.map((t) => t.user_id));
   render();
+  } catch (error) { loadError = friendlyError(error); render(); }
 }
 
 function syncPrivateOption() {
@@ -79,6 +83,7 @@ function syncPrivateOption() {
 
 export function initFeedback(supabase) {
   client = supabase;
+  initTicketThreads($("ticketList"), client, () => account.canPost ? account.user : null);
 
   $("ticketKindChips").addEventListener("click", (e) => {
     const chip = e.target.closest("[data-kind]");
@@ -128,18 +133,23 @@ export function initFeedback(supabase) {
       if (!account.require("Đăng nhập để ủng hộ đề xuất.")) return;
       const id = vote.dataset.vote;
       vote.disabled = true;
+      try {
       const { error } = myVotes.has(id)
         ? await client.from("ticket_votes").delete().eq("ticket_id", id).eq("user_id", account.user.id)
         : await client.from("ticket_votes").insert({ ticket_id: id });
       if (error) alert(friendlyError(error));
       await load();
+      } catch (error) { alert(friendlyError(error)); }
+      finally { vote.disabled = false; }
       return;
     }
     const del = e.target.closest("[data-delete-ticket]");
     if (del && confirm("Xóa góp ý này? Không thể hoàn tác.")) {
+      try {
       const { error } = await client.from("tickets").delete().eq("id", del.dataset.deleteTicket);
       if (error) alert(friendlyError(error));
       await load();
+      } catch (error) { alert(friendlyError(error)); }
     }
   });
 

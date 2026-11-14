@@ -155,7 +155,7 @@ function renderScores() {
   const inCat = records.filter((r) => cat === "all" || r.category === cat);
   const players = rankPlayers(inCat);
   $("playersCount").textContent = players.length;
-  $("reviewsCount").textContent = inCat.length;
+  $("reviewsCount").textContent = inCat.filter((r) => r.kind !== "adjustment").length;
   $("totalBP").textContent = formatBP(inCat.reduce((s, r) => s + (Number(r.points) || 0), 0));
 
   const q = $("rankSearch").value.trim().toLocaleLowerCase("vi");
@@ -187,6 +187,7 @@ for (const [select, key] of [["rankCategory", "rankGroup"], ["historyCategory", 
 
 /* ---------------- Detail modal ---------------- */
 function breakdown(r) {
+  if (r.kind === "adjustment") return `<h3>Điều chỉnh BP · ${r.source === "game" ? "Trong game" : "Website"}</h3><p>${formatDate(r.created_at)} · <b>${formatBP(r.points)} BP</b></p><p>${escapeHTML(r.note)}</p>`;
   const t = TYPES[r.category];
   if (!t) return "";
   const v = Array.isArray(r.criteria_scores) ? r.criteria_scores : [];
@@ -223,7 +224,7 @@ document.addEventListener("click", (e) => {
     const name = player.dataset.player;
     const list = records.filter((r) => String(r.player_name).toLowerCase() === name.toLowerCase());
     const total = list.reduce((s, r) => s + (Number(r.points) || 0), 0);
-    openModal(`<h2 id="detailTitle" style="display:flex;align-items:center;gap:.75rem">${avatar(name, 40)}${escapeHTML(name)}</h2><p><b>${formatBP(total)} BP</b> từ ${list.length} công trình</p>${list.map(breakdown).join("<hr>")}`);
+    openModal(`<h2 id="detailTitle" style="display:flex;align-items:center;gap:.75rem">${avatar(name, 40)}${escapeHTML(name)}</h2><p><b>${formatBP(total)} BP</b> · ${list.filter((r) => r.kind !== "adjustment").length} công trình và lịch sử điều chỉnh</p>${list.map(breakdown).join("<hr>")}`);
     return;
   }
   const detail = e.target.closest("[data-detail]");
@@ -234,10 +235,14 @@ document.addEventListener("click", (e) => {
 });
 
 /* ---------------- Load ---------------- */
+let scoresLoading = false;
 async function loadScores() {
+  if (scoresLoading) return;
+  scoresLoading = true;
   if (!supabaseConfigured) {
     loadError = "Chưa cấu hình Supabase";
     renderScores();
+    scoresLoading = false;
     return;
   }
   try {
@@ -249,11 +254,15 @@ async function loadScores() {
     loadError = String(error?.message || error);
   }
   renderScores();
+  scoresLoading = false;
 }
 window.addEventListener("open-detail", () => openModal(null)); // gallery lightbox
 
 renderScores();
 loadScores();
+setInterval(() => { if (!document.hidden && ["#rank", "#history", "#home", ""].includes(location.hash)) loadScores(); }, 30000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) loadScores(); });
+window.addEventListener("hashchange", () => { if (["#rank", "#history"].includes(location.hash)) loadScores(); });
 
 // Accounts, news, gallery and feedback share one Supabase client.
 getClient().then((client) => {

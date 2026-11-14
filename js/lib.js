@@ -46,7 +46,7 @@ export function rankPlayers(records) {
     const key = name.toLowerCase();
     const p = byPlayer.get(key) || { name, total: 0, count: 0 };
     p.total += Number(r.points) || 0;
-    p.count++;
+    if (r.kind !== "adjustment") p.count++;
     byPlayer.set(key, p);
   }
   return [...byPlayer.values()].sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
@@ -85,7 +85,7 @@ export const relativeTime = (iso) => {
 };
 
 export const formatDateTime = (iso) =>
-  new Date(iso).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" });
+  new Date(iso).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Ho_Chi_Minh" });
 
 /** Shrink an image in the browser to WebP (JPEG fallback) so uploads stay small. */
 export async function compressImage(file, maxSide = 1600, quality = 0.82) {
@@ -106,11 +106,18 @@ export async function compressImage(file, maxSide = 1600, quality = 0.82) {
 /** Map common Supabase errors to friendly Vietnamese text. */
 export function friendlyError(error) {
   const msg = String(error?.message || error || "");
+  if (["PGRST202", "PGRST204", "PGRST205"].includes(error?.code)) return "Chức năng này chưa được kích hoạt đầy đủ. Liên hệ admin để cập nhật nhé.";
   if (/Invalid login credentials/i.test(msg)) return "Sai tên hoặc mật khẩu.";
   if (/already registered|already been registered|duplicate key.*username/i.test(msg)) return "Tên này đã có người dùng. Nếu là bạn, hãy đăng nhập.";
   if (/Database error saving new user/i.test(msg)) return "Tên này đã có người dùng hoặc không hợp lệ. Thử tên khác nhé.";
   if (/Password should be at least/i.test(msg)) return "Mật khẩu quá ngắn.";
   if (/Email not confirmed/i.test(msg)) return "Tài khoản chưa được kích hoạt. Báo admin tắt xác nhận email trong Supabase.";
+  // Supabase only validates the address (and rejects the placeholder ".invalid" domain) when it
+  // tries to SEND a confirmation mail, i.e. when "Confirm email" is still ON for the project.
+  if (/Email address .* is invalid|email_address_invalid|Error sending confirmation (e)?mail|email rate limit/i.test(msg)) {
+    return "Đăng ký đang bị chặn: admin cần tắt \"Confirm email\" trong Supabase (Authentication → Sign In / Providers → Email).";
+  }
+  if (/Signups not allowed|signup.*disabled/i.test(msg)) return "Server đang tạm khóa đăng ký tài khoản mới.";
   if (/rate limit|too many/i.test(msg)) return "Thao tác quá nhanh, chờ một chút rồi thử lại nhé.";
   if (/row-level security|violates row-level/i.test(msg)) return "Bạn chưa có quyền làm việc này (tài khoản có thể đang bị khóa).";
   if (/Failed to fetch|NetworkError/i.test(msg)) return "Không kết nối được máy chủ dữ liệu. Thử lại nhé.";

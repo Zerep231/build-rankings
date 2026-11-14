@@ -8,7 +8,7 @@ let loadError = "";
 export function eventPhase(a, now = Date.now()) {
   if (a.kind !== "event" || !a.starts_at) return null;
   const start = new Date(a.starts_at).getTime();
-  const end = a.ends_at ? new Date(a.ends_at).getTime() : start + 2 * 3600_000;
+  const end = a.ends_at ? new Date(a.ends_at).getTime() : Infinity;
   if (now < start) return "upcoming";
   if (now <= end) return "live";
   return "ended";

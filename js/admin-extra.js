@@ -1,10 +1,16 @@
 import { GALLERY_BUCKET } from "../data/config.js";
 import { $, escapeHTML, formatDateTime, relativeTime, friendlyError, isMissingTable } from "./lib.js";
 import { namesFor } from "./profiles.js";
+import { threadHTML, initTicketThreads } from "./ticket-thread.js";
 
 const STATUS = { new: "Mới", in_progress: "Đang xử lý", done: "Đã xong", rejected: "Không thực hiện" };
 let client = null;
 let started = false;
+let adminUser = null;
+const background = (task) => Promise.resolve(task).catch((error) => alert(friendlyError(error)));
+const onAsync = (element, event, handler) => element.addEventListener(event, (e) => {
+  try { background(handler(e)); } catch (error) { alert(friendlyError(error)); }
+});
 const setupHint = '<p class="notice warning">Chưa chạy <code>supabase-v2.sql</code> trên Supabase, nên mục này chưa dùng được.</p>';
 
 /* ---------------- Tabs ---------------- */
@@ -15,7 +21,8 @@ function showTab(name) {
     t.setAttribute("aria-pressed", String(on));
   });
   document.querySelectorAll("[data-panel]").forEach((p) => p.classList.toggle("hide", p.dataset.panel !== name));
-  ({ news: loadNews, photos: loadPhotos, tickets: loadTickets, players: loadPlayers })[name]?.();
+  const load = ({ news: loadNews, photos: loadPhotos, tickets: loadTickets, players: loadPlayers })[name];
+  if (load) background(load());
 }
 
 /* ---------------- Announcements ---------------- */
@@ -23,10 +30,9 @@ let news = [];
 // <input type="datetime-local"> works in local time; convert to/from ISO (UTC) for the database.
 const toLocalInput = (iso) => {
   if (!iso) return "";
-  const d = new Date(iso);
-  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  return new Date(Date.parse(iso) + 7*3600000).toISOString().slice(0,16);
 };
-const fromLocalInput = (v) => (v ? new Date(v).toISOString() : null);
+const fromLocalInput = (v) => (v ? new Date(`${v}:00+07:00`).toISOString() : null);
 
 function resetNewsForm() {
   $("annForm").reset();
@@ -51,14 +57,18 @@ async function loadNews() {
 function bindNews() {
   $("annKind").addEventListener("change", () => $("annEventTimes").classList.toggle("hide", $("annKind").value !== "event"));
   $("annCancel").addEventListener("click", resetNewsForm);
-  $("annForm").addEventListener("submit", async (e) => {
+  onAsync($("annForm"), "submit", async (e) => {
     e.preventDefault();
+    if ($("annSave").disabled) return;
     const status = (t) => { $("annStatus").textContent = t; };
     const kind = $("annKind").value;
     const title = $("annTitleInput").value.trim();
     const cover = $("annCover").value.trim();
-    const starts = kind === "event" ? fromLocalInput($("annStart").value) : null;
-    const ends = kind === "event" ? fromLocalInput($("annEnd").value) : null;
+    let starts, ends;
+    try {
+      starts = kind === "event" ? fromLocalInput($("annStart").value) : null;
+      ends = kind === "event" ? fromLocalInput($("annEnd").value) : null;
+    } catch { return status("Thời gian chưa hợp lệ. Kiểm tra lại nhé."); }
     if (!title) { $("annTitleInput").focus(); return status("Nhập tiêu đề."); }
     if (cover && !/^https:\/\//.test(cover)) { $("annCover").focus(); return status("Link ảnh bìa phải bắt đầu bằng https://"); }
     if (kind === "event" && !starts) { $("annStart").focus(); return status("Event cần thời gian bắt đầu."); }
@@ -66,14 +76,17 @@ function bindNews() {
     const row = { kind, title, body: $("annBody").value.trim(), cover_url: cover || null, starts_at: starts, ends_at: ends, pinned: $("annPinned").checked };
     const id = $("annId").value;
     $("annSave").disabled = true;
+    try {
     const { error } = id ? await client.from("announcements").update(row).eq("id", id) : await client.from("announcements").insert(row);
     $("annSave").disabled = false;
     if (error) return status(friendlyError(error));
     status(id ? "Đã lưu thay đổi." : "Đã đăng.");
     resetNewsForm();
-    loadNews();
+    await loadNews();
+    } catch (error) { status(friendlyError(error)); }
+    finally { $("annSave").disabled = false; }
   });
-  $("annRows").addEventListener("click", async (e) => {
+  onAsync($("annRows"), "click", async (e) => {
     const edit = e.target.closest("[data-edit-ann]");
     if (edit) {
       const a = news.find((x) => x.id === edit.dataset.editAnn);
@@ -96,7 +109,7 @@ function bindNews() {
     if (del && confirm("Xóa thông báo này? Không thể hoàn tác.")) {
       const { error } = await client.from("announcements").delete().eq("id", del.dataset.delAnn);
       if (error) alert(friendlyError(error));
-      loadNews();
+      background(loadNews());
     }
   });
 }
@@ -121,15 +134,15 @@ async function loadPhotos() {
 }
 
 function bindPhotos() {
-  $("photoOnlyFlagged").addEventListener("change", loadPhotos);
-  $("photoRows").addEventListener("click", async (e) => {
+  $("photoOnlyFlagged").addEventListener("change", () => background(loadPhotos()));
+  onAsync($("photoRows"), "click", async (e) => {
     const toggle = e.target.closest("[data-toggle-photo]");
     if (toggle) {
       const p = photos.find((x) => x.id === toggle.dataset.togglePhoto);
       // Showing a post again also clears its reports counter.
       const { error } = await client.from("gallery_posts").update(p.hidden ? { hidden: false, report_count: 0 } : { hidden: true }).eq("id", p.id);
       if (error) alert(friendlyError(error));
-      loadPhotos();
+      background(loadPhotos());
       return;
     }
     const del = e.target.closest("[data-del-photo]");
@@ -139,7 +152,7 @@ function bindPhotos() {
       const { error } = await client.from("gallery_posts").delete().eq("id", p.id);
       if (error) { alert(friendlyError(error)); return; }
       await client.storage.from(GALLERY_BUCKET).remove([p.image_path]);
-      loadPhotos();
+      background(loadPhotos());
     }
   });
 }
@@ -166,34 +179,34 @@ async function loadTickets() {
         <div class="field" style="margin:0"><label for="st-${t.id}">Trạng thái</label>
           <select id="st-${t.id}" name="status">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}"${k === t.status ? " selected" : ""}>${v}</option>`).join("")}</select></div>
         <label class="check-row" style="align-self:end"><input type="checkbox" name="is_private"${t.is_private ? " checked" : ""} /> Chỉ admin xem</label>
-        <div class="field" style="margin:0; grid-column: 1 / -1"><label for="rp-${t.id}">Trả lời công khai</label>
-          <textarea id="rp-${t.id}" name="admin_reply" rows="2" maxlength="2000">${escapeHTML(t.admin_reply || "")}</textarea></div>
         <span><button class="btn btn-small btn-primary" type="submit">Lưu</button><button class="btn btn-small btn-danger" type="button" data-del-ticket="${t.id}">Xóa</button></span>
       </form>
+      ${t.admin_reply ? `<div class="reply" data-legacy-reply><b>Phản hồi trước đây:</b><p>${escapeHTML(t.admin_reply)}</p></div>` : ""}
+      ${threadHTML(t.id)}
     </article>`).join("") || '<p class="muted">Không có góp ý nào.</p>';
 }
 
 function bindTickets() {
-  $("tkFilter").addEventListener("change", loadTickets);
-  $("tkRows").addEventListener("submit", async (e) => {
-    const form = e.target.closest("[data-ticket]");
+  initTicketThreads($("tkRows"),client,() => adminUser,() => Boolean(adminUser));
+  $("tkFilter").addEventListener("change", () => background(loadTickets()));
+  onAsync($("tkRows"), "submit", async (e) => {
+    const form = e.target.matches("form[data-ticket]") ? e.target : null;
     if (!form) return;
     e.preventDefault();
     const fd = new FormData(form);
     const { error } = await client.from("tickets").update({
       status: fd.get("status"),
       is_private: fd.get("is_private") === "on",
-      admin_reply: String(fd.get("admin_reply") || "").trim() || null,
     }).eq("id", form.dataset.ticket);
     if (error) alert(friendlyError(error));
-    loadTickets();
+    background(loadTickets());
   });
-  $("tkRows").addEventListener("click", async (e) => {
+  onAsync($("tkRows"), "click", async (e) => {
     const del = e.target.closest("[data-del-ticket]");
     if (del && confirm("Xóa góp ý này? Không thể hoàn tác.")) {
       const { error } = await client.from("tickets").delete().eq("id", del.dataset.delTicket);
       if (error) alert(friendlyError(error));
-      loadTickets();
+      background(loadTickets());
     }
   });
 }
@@ -215,7 +228,7 @@ function renderPlayers() {
 }
 function bindPlayers() {
   $("plSearch").addEventListener("input", renderPlayers);
-  $("plRows").addEventListener("click", async (e) => {
+  onAsync($("plRows"), "click", async (e) => {
     const ban = e.target.closest("[data-ban]");
     const rename = e.target.closest("[data-rename]");
     const p = players.find((x) => x.id === (ban || rename)?.dataset[ban ? "ban" : "rename"]);
@@ -229,11 +242,15 @@ function bindPlayers() {
       if (next === null || next.trim() === p.username) return;
       if (!/^[A-Za-z0-9_]{3,16}$/.test(next.trim())) { alert("Tên cần 3 đến 16 ký tự: chữ, số hoặc dấu gạch dưới."); return; }
       change = { username: next.trim() };
-      alert("Lưu ý: người này vẫn đăng nhập bằng TÊN CŨ (tên đăng nhập gắn với tài khoản). Tên mới chỉ đổi phần hiển thị.");
     }
     const { error } = await client.from("profiles").update(change).eq("id", p.id);
-    if (error) alert(/duplicate key/i.test(error.message) ? "Tên này đã có người dùng." : friendlyError(error));
-    loadPlayers();
+    if (error) {
+      alert(/duplicate key/i.test(error.message) ? "Tên này đã có người dùng." : friendlyError(error));
+    } else if (change.username) {
+      alert(`Đã đổi tên hiển thị thành ${change.username}. Lưu ý: người này vẫn ĐĂNG NHẬP bằng tên cũ "${p.username}".`);
+    }
+    background(loadBadges());
+    background(loadPlayers());
   });
 }
 
@@ -247,9 +264,11 @@ async function loadBadges() {
   $("ticketBadge").textContent = ticketsRes.count ? `(${ticketsRes.count})` : "";
 }
 
-export function initAdminExtras(supabase) {
+export function initAdminExtras(supabase, user) {
   client = supabase;
-  if (started) { loadBadges(); return; }
+  adminUser = user;
+  if (!user) return;
+  if (started) { background(loadBadges()); return; }
   started = true;
   $("adminTabs").addEventListener("click", (e) => {
     const tab = e.target.closest("[data-tab]");
@@ -259,5 +278,5 @@ export function initAdminExtras(supabase) {
   bindPhotos();
   bindTickets();
   bindPlayers();
-  loadBadges();
+  background(loadBadges());
 }

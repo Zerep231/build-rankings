@@ -537,3 +537,8 @@
   gap: var(--space-2);
   margin-bottom: var(--space-5);
 }
+/* Threads and admin controls must also fit narrow phones. */
+.ticket-thread { margin-block: var(--space-3); }
+.ticket-thread > summary { list-style: none; }
+.ticket-thread [data-thread-body] { margin-top: var(--space-3); overflow-wrap: anywhere; }
+.manage-row > span { min-width: 0; overflow-wrap: anywhere; }

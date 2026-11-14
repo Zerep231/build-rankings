@@ -27,7 +27,7 @@
         <div class="page-head" style="margin: 0">
           <span class="eyebrow">Quản trị</span>
           <h1>Chấm Build Points</h1>
-          <p>Đăng nhập bằng tài khoản admin Supabase để chấm và quản lý điểm.</p>
+          <p>Đăng nhập bằng tài khoản web đã được cấp quyền admin để quản lý server.</p>
         </div>
 
         <div id="authStatus" class="notice" role="status" aria-live="polite">Đang kiểm tra kết nối…</div>
@@ -35,7 +35,7 @@
         <section id="loginArea" class="panel hide" aria-labelledby="loginTitle" style="max-width: 28rem">
           <h2 id="loginTitle">Đăng nhập</h2>
           <form id="loginForm" novalidate>
-            <div class="field"><label for="email">Email admin</label><input id="email" type="email" autocomplete="username" required /></div>
+            <div class="field"><label for="email">Tên đăng nhập admin</label><input id="email" type="text" autocomplete="username" required /><span class="field-hint">Tài khoản email admin cũ vẫn đăng nhập được để dự phòng.</span></div>
             <div class="field"><label for="password">Mật khẩu</label><input id="password" type="password" autocomplete="current-password" required /></div>
             <button class="btn btn-primary" id="login" type="submit">Đăng nhập</button>
           </form>
@@ -133,8 +133,8 @@
               <div class="grid-2" style="gap: 0 var(--space-5)">
                 <div class="field">
                   <label for="player">Tên Minecraft của builder</label>
-                  <input id="player" type="text" maxlength="16" autocomplete="off" aria-describedby="playerHint" />
-                  <span class="field-hint" id="playerHint">3 đến 16 ký tự: chữ, số hoặc dấu gạch dưới.</span>
+                  <input id="player" type="text" maxlength="17" autocomplete="off" aria-describedby="playerHint" />
+                  <span class="field-hint" id="playerHint">Tên nhân vật nhận BP trong game, có thể khác tên tài khoản web.</span>
                 </div>
                 <div class="field">
                   <label for="project">Tên công trình hoặc dự án</label>
@@ -155,11 +155,38 @@
                 <label for="note">Nhận xét hoặc link bằng chứng</label>
                 <textarea id="note" rows="3"></textarea>
               </div>
-              <button class="btn btn-primary" id="save" type="submit">Lưu lượt chấm</button>
+              <div class="filters">
+                <button class="btn btn-primary" id="save" type="submit">Lưu lượt chấm</button>
+                <button class="btn hide" id="cancelScoreEdit" type="button">Hủy sửa</button>
+              </div>
               <p id="saveStatus" class="form-status" role="status" aria-live="polite"></p>
             </form>
           </section>
 
+          <section class="panel" aria-labelledby="adjustTitle">
+            <h2 id="adjustTitle">Cộng / trừ BP</h2>
+            <p class="field-hint">Điểm lưu vào lịch sử chung và tự đồng bộ với bảng trong game.</p>
+            <form id="adjustForm">
+              <div class="grid-2">
+                <div class="field"><label for="adjustPlayer">Tên nhân vật trong game</label><input id="adjustPlayer" maxlength="17" required /></div>
+                <div class="field"><label for="adjustCategory">Hạng mục</label><select id="adjustCategory"></select></div>
+                <div class="field"><label for="adjustAmount">BP thay đổi (số âm để trừ)</label><input id="adjustAmount" type="number" min="-1000000" max="1000000" step="0.5" required /></div>
+                <div class="field"><label for="adjustReason">Lý do</label><input id="adjustReason" minlength="3" maxlength="500" required /></div>
+              </div>
+              <button class="btn btn-primary" type="submit">Lưu điều chỉnh</button>
+              <p class="form-status" id="adjustStatus" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+          <section class="panel" aria-labelledby="syncTitle">
+            <h2 id="syncTitle">Kết nối DirtyLeaderboards</h2>
+            <p>Tạo khóa riêng cho server rồi chép cấu hình vào plugin 2.5.0. Khóa chỉ hiện một lần tại đây.</p>
+            <form id="syncForm">
+              <div class="field"><label for="syncName">Tên server</label><input id="syncName" maxlength="80" required value="EQUAL SURVIVAL" /></div>
+              <button class="btn" type="submit">Tạo khóa kết nối</button>
+              <p class="form-status" id="syncStatus" role="status" aria-live="polite"></p>
+              <div class="field hide" id="syncResult"><label for="syncConfig">Cấu hình plugin (giữ riêng trên server)</label><textarea id="syncConfig" rows="9" readonly></textarea></div>
+            </form>
+          </section>
           <section class="panel" aria-labelledby="manageTitle">
             <div class="panel-title">
               <h2 id="manageTitle">Kết quả đã lưu</h2>
