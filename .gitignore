@@ -4,6 +4,12 @@
 .codex/
 .mcp.json
 
+# Local documentation and database setup scripts are not deployed.
+/AGENTS.md
+/HUONG-DAN.md
+/README.md
+/supabase*.sql
+
 # Private environment files and local logs.
 .env
 .env.*
