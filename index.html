@@ -1,11 +1,304 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Minecraft Server | Giới thiệu & Build Rankings</title><meta name="description" content="Thông tin máy chủ Minecraft, plugin, hướng dẫn tham gia và bảng xếp hạng Build Points."><style>
-:root{font-family:system-ui,Arial;background:#0b111c;color:#e9f0fb}*{box-sizing:border-box}body{margin:0}header{background:#121e30;border-bottom:1px solid #29394f;padding:20px max(20px,calc((100vw - 1050px)/2))}h1{margin:0;color:#f6ca67;font-size:27px}small,.muted{color:#a5b4c8}nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}button{background:#22344c;color:white;border:1px solid #40536b;border-radius:9px;padding:10px 15px;cursor:pointer}button.active,.primary{background:#e7b854;color:#17202d;font-weight:700;border-color:#e7b854}main{max-width:1050px;margin:auto;padding:25px 18px}.panel{background:#152236;border:1px solid #2c405a;border-radius:14px;padding:20px;margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.stat{background:#20314a;padding:16px;border-radius:10px}.stat strong{display:block;font-size:25px;color:#f6ca67}h2{margin:0 0 15px;font-size:21px}h3{color:#f6ca67}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:11px;border-bottom:1px solid #32435a}input,select,textarea{width:100%;background:#0d1726;color:white;border:1px solid #40536b;border-radius:8px;padding:11px;margin:6px 0 14px}label{display:block;font-weight:600}.criteria{display:grid;grid-template-columns:1fr 105px;align-items:center;gap:12px;margin:9px 0}.criteria input{margin:0}p,li{line-height:1.6}.hide{display:none}.notice{padding:12px;background:#283a4d;border-radius:9px;margin-bottom:14px}.danger{background:#6a2731}.right{text-align:right}.score{font-size:29px;color:#f6ca67;font-weight:800}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{flex:1}footer{text-align:center;padding:25px;color:#8fa1b9}@media(max-width:550px){td,th{padding:8px 4px;font-size:13px}.criteria{grid-template-columns:1fr 85px}}
-.stat{border:1px solid #3b4b60;background:linear-gradient(140deg,#1d3043,#111d2c)}header{background:linear-gradient(135deg,#172637,#0b111c);border-bottom:2px solid #bd9854}header h1{letter-spacing:.07em;font-weight:900}.panel{box-shadow:0 10px 35px #0002}button:hover{filter:brightness(1.15)}button:focus-visible,input:focus-visible{outline:2px solid #f6ca67;outline-offset:2px}.rankbtn{background:transparent;border:0;padding:2px;color:#f6ca67;font-weight:700;text-decoration:underline}.meter{height:9px;background:#34465b;border-radius:20px;overflow:hidden;margin:8px 0}.meter i{display:block;height:100%;background:linear-gradient(90deg,#d3a452,#f7d58c);border-radius:20px}.rubric-row{margin:15px 0}.rubric-row .row{justify-content:space-between}.rubric-row .row>*{flex:unset}.tag{display:inline-block;padding:4px 9px;border:1px solid #6a5940;border-radius:99px;color:#f5cf8b;font-size:12px}#detailModal{position:fixed;inset:0;background:#000b;z-index:30;overflow:auto;padding:30px 12px}#detailModal:not(.hide){display:flex;justify-content:center;align-items:flex-start}.modal-inner{background:#132238;border:1px solid #6b5a3c;border-radius:16px;padding:23px;width:min(680px,100%);max-height:90vh;overflow:auto}.filters{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:12px 0 18px}.filters input,.filters select{margin:0}.notice.warning{border:1px solid #a57a3c;background:#362d1e}.notice.success{border:1px solid #4c806b;background:#18372f}.small{font-size:13px;color:#a5b4c8}.panel h2{font-weight:800}.row button{flex:0 1 auto}@media(max-width:600px){.filters{grid-template-columns:1fr}.filters input,.filters select{width:100%}} .server-hero{padding:45px 32px;margin-bottom:20px;border:1px solid #6c5938;border-radius:18px;background:radial-gradient(circle at 88% 12%,#69502a55,transparent 44%),linear-gradient(125deg,#23374b,#101b2b 80%)}.server-hero h2{font-size:clamp(32px,6vw,57px);line-height:1.13;letter-spacing:-.035em;margin:17px 0}.server-hero em{color:#f6ca67;font-style:normal}.server-hero p{max-width:650px;color:#b8c7d9}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.18em;color:#e7b854}.hero-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:22px}.hero-link{color:#f6ca67;text-decoration:none}.server-stats{margin-bottom:18px}.server-stats strong{font-size:clamp(16px,2.8vw,23px);overflow-wrap:anywhere;margin:10px 0}.server-stats button{padding:7px 11px;font-size:12px}.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.feature{padding:17px;background:#1a2b40;border:1px solid #354b65;border-radius:12px}.feature b{display:block;color:#f6ca67;margin-bottom:6px}.feature p{margin:0;color:#b8c7d9;font-size:14px}.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.steps>div{padding:16px;border-left:2px solid #d9ab59;background:#1b2a3c}.steps p{margin-bottom:0;color:#b8c7d9}a{color:#f6ca67}@media(max-width:600px){.server-hero{padding:30px 20px}} /* hallmark: minecraft forest · split server + builder homepage · custom redesign */
-/* critique: preserve scoring and auth; foreground actual addresses, command reference and leaderboard. */
-:root{--mc-bg:#0e1713;--mc-surface:#17251d;--mc-surface2:#213429;--mc-ink:#f1f3e8;--mc-muted:#b6c8b8;--mc-green:#9bd17a;--mc-gold:#e6c77a;--mc-line:#385242;--mc-focus:#e6c77a;--mc-font:system-ui,Arial,sans-serif}
-html,body{overflow-x:clip}body{font-family:var(--mc-font);background:var(--mc-bg);color:var(--mc-ink)}header{background:var(--mc-surface);border-bottom:2px solid var(--mc-line)}h1{color:var(--mc-green);letter-spacing:0}main{max-width:1120px}.panel{background:var(--mc-surface);border:1px solid var(--mc-line);box-shadow:none}.stat,.feature,.steps>div{background:var(--mc-surface2);border-color:var(--mc-line)}.stat strong,h3,.score,.feature b{color:var(--mc-green)}button{background:var(--mc-surface2);border-color:var(--mc-line);color:var(--mc-ink)}button.active,.primary{background:var(--mc-green);border-color:var(--mc-green);color:var(--mc-bg)}button:hover{filter:brightness(1.08)}a,.hero-link,.rankbtn{color:var(--mc-gold)}small,.muted,.small{color:var(--mc-muted)}.server-hero{background:linear-gradient(115deg,var(--mc-surface2),var(--mc-bg));border-color:var(--mc-line);border-radius:8px}.server-hero h2{letter-spacing:-.04em;overflow-wrap:break-word;min-width:0}.server-hero em{color:var(--mc-green)}.server-hero p,.feature p,.steps p{color:var(--mc-muted)}.eyebrow{color:var(--mc-gold);letter-spacing:0;text-transform:none;font-weight:600}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.section-heading h2{margin:0}.table-scroll{overflow-x:auto}td,th{border-bottom:1px solid var(--mc-line)}th{color:var(--mc-gold)}input,select,textarea{background:var(--mc-bg);border-color:var(--mc-line);color:var(--mc-ink)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--mc-focus);outline-offset:2px}.modal-inner{background:var(--mc-surface);border-color:var(--mc-line)}.meter{background:var(--mc-line)}.meter i{background:var(--mc-green)}.tag{border-color:var(--mc-line);color:var(--mc-gold)}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}@media(max-width:600px){.server-hero{padding:28px 18px}.server-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{min-width:0}.stat strong{font-size:16px}} </style></head><body><header><h1>⛏️ MINECRAFT COMMUNITY</h1><small>CỘNG ĐỒNG BUILDER • HỒ SƠ KIẾN TRÚC • BẢNG ĐIỂM CÔNG KHAI</small><nav><button class="active" data-tab="server">🌍 Server</button><button data-tab="rank">🏆 Xếp hạng</button><button data-tab="rules">📜 Tiêu chuẩn</button><button data-tab="history">📋 Lịch sử</button><button data-tab="admin">🔐 Admin</button></nav></header><main>
-<section id="server"><div class="server-hero"><span class="eyebrow">Luna Minecraft</span><h2>Xây thế giới của bạn.<br><em>Để công trình lên tiếng.</em></h2><p>Không gian giới thiệu máy chủ Minecraft và ghi nhận đóng góp xây dựng của cộng đồng. Khám phá thông tin server, hệ thống plugin và thành tích Build Points.</p><div class="hero-actions"><button class="primary" id="goRank">🏆 Xem bảng xếp hạng BP</button></div></div><div class="grid server-stats"><div class="stat">Địa chỉ Java<strong id="serverIP">Chưa cập nhật</strong><button id="copyIP" disabled>Sao chép IP</button></div><div class="stat">Phiên bản<strong id="serverVersion">Chưa xác minh</strong><span class="small">Minecraft Java</span></div><div class="stat">Bedrock Edition<strong id="bedrockAddress">luna.lumine.buzz:19101</strong><button id="copyBedrock">Sao chép Bedrock</button></div><div class="stat">Trạng thái<strong id="serverStatus">Chưa kiểm tra</strong><span class="small">Không phải trạng thái trực tuyến</span></div></div><div class="panel"><h2>🧭 Giới thiệu máy chủ</h2><p id="serverDescription">Thông tin giới thiệu máy chủ sẽ được bổ sung sau khi xác minh cấu hình.</p><div id="serverHighlights" class="feature-grid"></div></div><div class="panel"><h2>🧩 Hệ thống plugin</h2><p class="muted">Chỉ liệt kê plugin đã xác minh từ log hoặc thông tin quản trị. Log có thể không phản ánh chính xác các plugin đang hoạt động hiện tại.</p><div id="serverPlugins" class="feature-grid"></div></div><div class="panel"><div class="section-heading"><h2>Bảng xếp hạng Builder</h2><button id="goRankFull">Xem toàn bộ bảng xếp hạng</button></div><p class="muted">Thành tích xây dựng được cập nhật từ hệ thống chấm điểm BP.</p><div class="table-scroll"><table><thead><tr><th>Hạng</th><th>Builder</th><th>BP</th><th>Lượt chấm</th></tr></thead><tbody id="rankPreview"><tr><td colspan="4">Đang tải bảng xếp hạng…</td></tr></tbody></table></div></div><div class="panel"><h2>Lệnh trong server</h2><p class="muted" id="commandsNote">Danh sách tham khảo, cần đối chiếu với plugin và quyền của người chơi.</p><div class="table-scroll"><table><thead><tr><th>Lệnh</th><th>Công dụng</th><th>Ghi chú</th></tr></thead><tbody id="serverCommands"></tbody></table></div></div><div class="panel"><h2>🚀 Hướng dẫn tham gia</h2><div class="steps"><div><b>01 · Mở Minecraft</b><p>Vào Multiplayer → Add Server.</p></div><div><b>02 · Nhập địa chỉ</b><p id="serverJoinAddress">IP máy chủ đang chờ xác minh.</p></div><div><b>03 · Bắt đầu xây dựng</b><p>Tham gia cộng đồng, xây công trình và nhận BP sau khi được Admin chấm.</p></div></div></div></section><section id="rank" class="hide"><div class="grid"><div class="stat">Tổng Builder<strong id="playersCount">0</strong></div><div class="stat">Lượt chấm<strong id="reviewsCount">0</strong></div><div class="stat">Tổng BP đã trao<strong id="totalBP">0</strong></div></div><div class="panel" style="margin-top:18px"><h2>🏆 Bảng xếp hạng Builder</h2><p class="muted">Chạm vào tên người chơi để xem công trình và điểm từng tiêu chí.</p><div class="filters"><input id="search" placeholder="🔎 Tìm tên Minecraft..." aria-label="Tìm người chơi"><select id="rankCategory" aria-label="Lọc bảng xếp hạng"><option value="all">Tất cả hạng mục</option><option value="self">Tự Build</option><option value="litematica">Litematica</option><option value="assist">Phụ Build</option><option value="plan">Quy hoạch</option></select></div><div style="overflow-x:auto"><table><thead><tr><th>Hạng</th><th>Người chơi</th><th class="right">Tổng BP</th><th class="right">Lượt chấm</th></tr></thead><tbody id="leaderboard"></tbody></table></div></div></section>
-<section id="rules" class="hide"><div class="panel"><h2>📜 Quy định chấm điểm Build Points</h2><p>Điểm BP tích lũy từ công trình tự Build, xây theo Litematica, phụ Build và quy hoạch. Điểm do Admin xét duyệt theo đóng góp thực tế.</p><div id="rulesContent"></div><h3>⚖️ Quy định chung</h3><ol><li>Mỗi công trình chính chỉ chọn Tự Build hoặc Litematica.</li><li>Không spam công trình đơn giản, phá xây lại để farm điểm.</li><li>Không tính trùng công việc đã được nhận điểm.</li><li>Nâng cấp công trình hoặc quy hoạch chỉ nhận phần điểm tăng thêm.</li><li>Điểm dự án nhóm được chia theo đóng góp thực tế; tổng điểm chia không vượt điểm dự án.</li><li>Admin có quyền yêu cầu bằng chứng và kiểm tra trực tiếp.</li></ol></div></section>
-<section id="history" class="hide"><div class="panel"><h2>📋 Lịch sử chấm điểm</h2><div class="filters"><input id="historySearch" placeholder="Tìm người chơi hoặc công trình"><select id="historyCategory"><option value="all">Tất cả hạng mục</option><option value="self">Tự Build</option><option value="litematica">Litematica</option><option value="assist">Phụ Build</option><option value="plan">Quy hoạch</option></select></div><div style="overflow-x:auto"><table><thead><tr><th>Ngày</th><th>Builder</th><th>Công trình</th><th>Loại</th><th class="right">BP</th><th>Chi tiết</th></tr></thead><tbody id="historyRows"></tbody></table></div></div></section>
-<section id="admin" class="hide"><div class="panel"><h2>🔐 Khu vực quản trị</h2><div id="authStatus" class="notice">Đang kiểm tra kết nối...</div><div id="loginArea"><label>Email Admin</label><input id="email" type="email" placeholder="admin@example.com"><label>Mật khẩu</label><input id="password" type="password" placeholder="Mật khẩu Supabase"><button class="primary" id="login">Đăng nhập</button></div><div id="adminArea" class="hide"><div class="row"><button id="logout">Đăng xuất</button><button id="exportCSV">Xuất CSV lịch sử</button></div><h3>Chấm điểm mới</h3><label>Tên người chơi Minecraft</label><input id="player" maxlength="32" placeholder="Ví dụ: Builder123"><label>Tên công trình / dự án</label><input id="project" maxlength="120" placeholder="Ví dụ: Thành phố cổ"><label>Hạng mục</label><select id="category"></select><div id="criteriaForm"></div><div id="scorePreview" class="panel" style="margin-top:16px;background:#0e1b2b"></div><div class="notice">Tổng điểm: <span class="score" id="score">0</span> / <span id="maxScore">10</span> BP</div><label>Ghi chú / Bằng chứng (URL)</label><textarea id="note" rows="3" placeholder="Mô tả đóng góp hoặc đường dẫn ảnh..."></textarea><button class="primary" id="save">Lưu kết quả chấm</button><p id="saveStatus" class="muted" role="status" aria-live="polite"></p><h3>Quản lý kết quả</h3><div id="manageRows"></div></div></div></section>
-<div id="detailModal" class="hide" role="dialog" aria-modal="true"><div class="modal-inner"><button id="closeDetail">✕ Đóng</button><div id="detailBody"></div></div></div></main><footer>Build Rankings • Minecraft Community • Hosted on GitHub Pages</footer><script src="config.js"></script><script src="server-config.js"></script><script src="server.js"></script><script type="module" src="app.js"></script></body></html>
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="EQUALSURVIVAL: xem bảng Build Points, lịch sử chấm công trình và lệnh dành cho member."
+    />
+    <meta name="theme-color" content="#123e70" />
+    <title>EQUALSURVIVAL | Bảng điểm cộng đồng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="base.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="#server" data-tab="server" aria-label="EQUALSURVIVAL, trang chủ">
+          EQUALSURVIVAL
+        </a>
+        <nav class="primary-nav" aria-label="Điều hướng chính">
+          <button type="button" data-tab="server" aria-controls="server" aria-current="page">Máy chủ</button>
+          <button type="button" data-tab="rank" aria-controls="rank">Xếp hạng</button>
+          <button type="button" data-tab="rules" aria-controls="rules">Nội quy</button>
+          <button type="button" data-tab="history" aria-controls="history">Lịch sử</button>
+          <button type="button" data-tab="admin" aria-controls="admin">Quản trị</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="mainContent">
+      <section id="server" class="page-view">
+        <div class="hero-band">
+          <div class="hero-layout page-width">
+            <div class="hero-copy">
+              <h1>Mỗi công trình<br />có một vị trí.</h1>
+              <p class="hero-lead">EQUALSURVIVAL ghi nhận điểm xây dựng và đóng góp của từng builder.</p>
+              <div class="hero-actions">
+                <button class="button button-primary" id="goRank" type="button">Mở bảng xếp hạng</button>
+                <button class="button button-outline" id="copyIP" type="button" disabled>Sao chép địa chỉ</button>
+              </div>
+              <div class="join-line">
+                <span class="field-label">Địa chỉ Java</span>
+                <code id="serverIP">Đang tải địa chỉ…</code>
+              </div>
+            </div>
+
+            <aside class="scoreboard-preview" aria-labelledby="previewTitle">
+              <div class="board-heading">
+                <h2 id="previewTitle">Builder dẫn đầu</h2>
+                <span class="data-source">BP từ Supabase</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr><th scope="col">Hạng</th><th scope="col">Builder</th><th scope="col" class="numeric">BP</th><th scope="col" class="numeric">Lượt chấm</th></tr>
+                  </thead>
+                  <tbody id="rankPreview">
+                    <tr><td colspan="4" class="table-message">Đang tải bảng xếp hạng…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <button class="text-button" id="goRankFull" type="button">Xem tất cả builder</button>
+            </aside>
+          </div>
+        </div>
+
+        <div class="page-width page-flow">
+          <section class="connection-strip" aria-label="Thông tin kết nối">
+            <div><span class="field-label">Phiên bản trong log</span><strong id="serverVersion">Đang tải…</strong></div>
+            <div><span class="field-label">Bedrock</span><strong id="bedrockAddress">Chưa xác minh</strong></div>
+            <div><span class="field-label">Trạng thái</span><strong id="serverStatus">Chưa kiểm tra</strong></div>
+            <button class="button button-outline" id="copyBedrock" type="button">Sao chép Bedrock</button>
+          </section>
+
+          <section class="intro-section" aria-labelledby="serverIntroTitle">
+            <div class="section-heading">
+              <h2 id="serverIntroTitle">Cộng đồng ghi nhận công trình</h2>
+              <p id="serverDescription">Thông tin máy chủ đang được cập nhật.</p>
+            </div>
+            <div id="serverHighlights" class="highlight-grid"></div>
+          </section>
+
+          <section class="leaderboard-section" aria-labelledby="systemTitle">
+            <div class="section-heading section-heading-split">
+              <h2 id="systemTitle">Điểm được chấm theo tiêu chí</h2>
+              <p>Admin lưu từng lượt chấm. Member xem tổng điểm, hạng mục và bằng chứng công trình.</p>
+            </div>
+            <div class="system-line">
+              <span class="system-mark" aria-hidden="true">BP</span>
+              <p>Bảng BP trên website đang dùng dữ liệu chấm điểm trong Supabase. DirtyLeaderboards có trong log server và hỗ trợ PlaceholderAPI; website hiện chưa có bridge để đọc bảng plugin.</p>
+              <button type="button" class="text-button" data-tab="rules" aria-controls="rules">Xem nội quy và cách tính điểm</button>
+            </div>
+          </section>
+
+          <section class="commands-section" aria-labelledby="commandsTitle">
+            <div class="section-heading section-heading-split">
+              <h2 id="commandsTitle">Lệnh dành cho member</h2>
+              <p id="commandsNote">Lệnh được đối chiếu với plugin trong log. Quyền thực tế còn tùy cấu hình LuckPerms.</p>
+            </div>
+            <div class="command-filters">
+              <label class="visually-hidden" for="commandSearch">Tìm lệnh hoặc công dụng</label>
+              <input id="commandSearch" type="search" placeholder="Tìm lệnh hoặc công dụng" />
+              <label class="visually-hidden" for="commandCategory">Lọc nhóm lệnh</label>
+              <select id="commandCategory">
+                <option value="all">Tất cả nhóm lệnh</option>
+                <option value="Di chuyển">Di chuyển</option>
+                <option value="Nhà">Nhà</option>
+                <option value="Bảo vệ đất">Bảo vệ đất</option>
+                <option value="Tương tác">Tương tác</option>
+              </select>
+            </div>
+            <div id="serverCommands" class="command-list" aria-live="polite"></div>
+            <p class="source-note">Lệnh quản trị của DirtyLeaderboards không nằm trong danh sách member.</p>
+          </section>
+
+          <section class="plugins-section" aria-labelledby="pluginsTitle">
+            <div class="section-heading section-heading-split">
+              <h2 id="pluginsTitle">Plugin tìm thấy trong log</h2>
+              <p>Đây là ảnh chụp cấu hình lúc log được tạo, không phải kiểm tra trạng thái trực tiếp.</p>
+            </div>
+            <div id="serverPlugins" class="plugin-list"></div>
+            <p class="source-note">Nguồn máy chủ: <a href="https://mclo.gs/AYBDv3v" target="_blank" rel="noreferrer">mclo.gs/AYBDv3v</a></p>
+          </section>
+
+          <section class="join-section" aria-labelledby="joinTitle">
+            <div class="section-heading">
+              <h2 id="joinTitle">Bắt đầu tham gia</h2>
+              <p>Sao chép địa chỉ ở đầu trang, sau đó thêm máy chủ trong Minecraft.</p>
+            </div>
+            <ol class="join-steps">
+              <li><strong>Mở Multiplayer</strong><span>Chọn chế độ nhiều người chơi trong Minecraft.</span></li>
+              <li><strong>Thêm máy chủ</strong><span>Dán địa chỉ Java hoặc Bedrock tương ứng.</span></li>
+              <li><strong>Gửi công trình</strong><span>Admin chấm BP theo tiêu chí của website.</span></li>
+            </ol>
+          </section>
+        </div>
+      </section>
+
+      <section id="rank" class="page-view hide">
+        <div class="page-width page-flow">
+          <div class="page-title-row"><div><h1>Bảng xếp hạng</h1><p>Điểm cộng dồn từ các lượt chấm công trình đã lưu.</p></div><span class="data-source">Nguồn: Supabase</span></div>
+          <dl class="summary-grid">
+            <div><dt>Builder</dt><dd id="playersCount">0</dd></div>
+            <div><dt>Lượt chấm</dt><dd id="reviewsCount">0</dd></div>
+            <div><dt>Tổng BP</dt><dd id="totalBP">0</dd></div>
+          </dl>
+          <section class="data-panel" aria-labelledby="rankingTitle">
+            <div class="section-heading section-heading-split"><h2 id="rankingTitle">Thứ hạng theo BP</h2><p>Chọn builder để mở chi tiết từng công trình.</p></div>
+            <div class="table-filters">
+              <label class="visually-hidden" for="search">Tìm tên Minecraft</label>
+              <input id="search" type="search" placeholder="Tìm tên Minecraft…" />
+              <label class="visually-hidden" for="rankCategory">Lọc hạng mục</label>
+              <select id="rankCategory">
+                <option value="all">Tất cả hạng mục</option>
+                <option value="self">Tự Build</option>
+                <option value="litematica">Litematica</option>
+                <option value="assist">Phụ Build</option>
+                <option value="plan">Quy hoạch</option>
+              </select>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th scope="col">Hạng</th><th scope="col">Người chơi</th><th scope="col" class="numeric">Tổng BP</th><th scope="col" class="numeric">Lượt chấm</th></tr></thead>
+                <tbody id="leaderboard"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="rules" class="page-view hide">
+        <div class="page-width page-flow">
+          <div class="page-title-row"><div><h1>Nội quy EQUALSURVIVAL</h1><p>Giữ thế giới an toàn, công bằng và dễ chơi cùng nhau.</p></div></div>
+          <section class="rules-register" aria-label="Nội quy server">
+            <article class="rule-entry">
+              <span class="rule-number">01</span>
+              <div><h2>Tôn trọng tài sản</h2><p>Không trộm cắp, phá hoại hoặc tự ý lấy đồ từ công trình và khu vực của người chơi khác khi chưa được cho phép.</p><p class="rule-penalty">Xử lý theo mức độ: cảnh cáo, xử phạt hoặc ban.</p></div>
+            </article>
+            <article class="rule-entry">
+              <span class="rule-number">02</span>
+              <div><h2>Không hack, cheat hoặc lợi dụng lỗi</h2><p>Cấm client gian lận, lạm dụng bug, exploit, dupe hoặc cố tình gây lag và mất cân bằng server.</p><p class="rule-penalty">Ban từ 1 đến 3 ngày hoặc vĩnh viễn tùy mức độ.</p></div>
+            </article>
+            <article class="rule-entry">
+              <span class="rule-number">03</span>
+              <div><h2>Giao tiếp có chừng mực</h2><p>Không toxic, xúc phạm, gây war hoặc chửi tục quá mức. Mâu thuẫn nên giải quyết riêng hoặc nhờ Admin, không làm rối cộng đồng.</p><p class="rule-penalty">Có thể bị mute hoặc cảnh cáo tùy mức độ.</p></div>
+            </article>
+            <article class="rule-entry">
+              <span class="rule-number">04</span>
+              <div><h2>Không spam nội dung không phù hợp</h2><p>Không spam tin nhắn, ping, emoji, ảnh hoặc video. Không gửi nội dung NSFW, quảng cáo, kinh doanh hoặc nội dung chống phá nhà nước.</p><p class="rule-penalty">Cảnh cáo hoặc mute; vi phạm nặng có thể bị ban.</p></div>
+            </article>
+          </section>
+          <section class="penalty-section" aria-labelledby="penaltyTitle">
+            <h2 id="penaltyTitle">Hệ thống xử phạt</h2>
+            <ol class="penalty-list">
+              <li>Vi phạm thông thường có thể nhận tối đa ba lần cảnh cáo.</li>
+              <li>Tái phạm sau cảnh cáo có thể bị ban.</li>
+              <li>Vi phạm nặng có thể bị ban ngay.</li>
+              <li>Hình phạt dựa trên mức độ và lịch sử vi phạm.</li>
+            </ol>
+          </section>
+          <section class="data-panel rubric-panel" aria-labelledby="rubricTitle">
+            <div class="section-heading section-heading-split"><h2 id="rubricTitle">Cách tính Build Points</h2><p>Mỗi hạng mục có thang điểm và tiêu chí riêng.</p></div>
+            <div id="rulesContent"></div>
+            <div class="policy-copy">
+              <h2>Quy định chấm điểm</h2>
+              <ol>
+                <li>Công trình chính chọn Tự Build hoặc Litematica.</li>
+                <li>Không gửi công trình lặp lại để farm điểm.</li>
+                <li>Không tính lại phần việc đã được chấm điểm.</li>
+                <li>Nâng cấp chỉ nhận điểm cho phần giá trị tăng thêm.</li>
+                <li>Điểm dự án nhóm chia theo đóng góp thực tế.</li>
+                <li>Admin có thể yêu cầu bằng chứng hoặc kiểm tra trực tiếp.</li>
+              </ol>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="history" class="page-view hide">
+        <div class="page-width page-flow">
+          <div class="page-title-row"><div><h1>Lịch sử chấm điểm</h1><p>Xem công trình, hạng mục và điểm đã ghi nhận.</p></div></div>
+          <section class="data-panel" aria-labelledby="historyTitle">
+            <h2 id="historyTitle">Các lượt chấm gần đây</h2>
+            <div class="table-filters">
+              <label class="visually-hidden" for="historySearch">Tìm builder hoặc công trình</label>
+              <input id="historySearch" type="search" placeholder="Tìm builder hoặc công trình" />
+              <label class="visually-hidden" for="historyCategory">Lọc hạng mục lịch sử</label>
+              <select id="historyCategory">
+                <option value="all">Tất cả hạng mục</option>
+                <option value="self">Tự Build</option>
+                <option value="litematica">Litematica</option>
+                <option value="assist">Phụ Build</option>
+                <option value="plan">Quy hoạch</option>
+              </select>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th scope="col">Ngày</th><th scope="col">Builder</th><th scope="col">Công trình</th><th scope="col">Hạng mục</th><th scope="col" class="numeric">BP</th><th scope="col">Chi tiết</th></tr></thead>
+                <tbody id="historyRows"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="admin" class="page-view hide">
+        <div class="page-width page-flow admin-layout">
+          <div class="page-title-row"><div><h1>Khu vực quản trị</h1><p>Đăng nhập để chấm điểm và quản lý kết quả.</p></div></div>
+          <div id="authStatus" class="notice" role="status" aria-live="polite">Đang kiểm tra kết nối…</div>
+          <section id="loginArea" class="data-panel login-panel" aria-label="Đăng nhập quản trị">
+            <label for="email">Email Admin</label>
+            <input id="email" type="email" autocomplete="username" placeholder="admin@example.com" />
+            <label for="password">Mật khẩu</label>
+            <input id="password" type="password" autocomplete="current-password" placeholder="Mật khẩu Supabase" />
+            <button class="button button-primary" id="login" type="button">Đăng nhập</button>
+          </section>
+          <section id="adminArea" class="data-panel hide" aria-label="Công cụ chấm điểm">
+            <div class="admin-toolbar"><button class="button button-outline" id="logout" type="button">Đăng xuất</button><button class="button button-outline" id="exportCSV" type="button">Xuất lịch sử CSV</button></div>
+            <h2>Chấm công trình</h2>
+            <label for="player">Tên người chơi Minecraft</label>
+            <input id="player" maxlength="32" autocomplete="off" placeholder="Ví dụ: Builder123" />
+            <label for="project">Tên công trình hoặc dự án</label>
+            <input id="project" maxlength="120" autocomplete="off" placeholder="Tên công trình" />
+            <label for="category">Hạng mục</label>
+            <select id="category"></select>
+            <div id="criteriaForm" class="criteria-form"></div>
+            <div id="scorePreview" class="score-preview"></div>
+            <p class="score-total">Tổng điểm <strong id="score">0</strong> / <span id="maxScore">10</span> BP</p>
+            <label for="note">Ghi chú hoặc link bằng chứng</label>
+            <textarea id="note" rows="3" placeholder="Mô tả đóng góp hoặc link ảnh"></textarea>
+            <button class="button button-primary" id="save" type="button">Lưu lượt chấm</button>
+            <p id="saveStatus" class="form-status" role="status" aria-live="polite"></p>
+            <h2>Kết quả đã lưu</h2>
+            <div id="manageRows" class="manage-rows"></div>
+          </section>
+        </div>
+      </section>
+
+      <div id="detailModal" class="modal-shell hide" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+        <div class="modal-inner">
+          <button class="button button-outline" id="closeDetail" type="button">Đóng chi tiết</button>
+          <div id="detailBody"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="page-width footer-inner"><strong>EQUALSURVIVAL</strong><span>Bảng điểm cộng đồng</span><a href="https://github.com/Zerep231/DirtyLeaderboards" target="_blank" rel="noreferrer">DirtyLeaderboards</a></div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="server-config.js"></script>
+    <script src="server.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
