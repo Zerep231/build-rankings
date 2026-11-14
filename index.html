@@ -3,302 +3,440 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="EQUALSURVIVAL: xem bảng Build Points, lịch sử chấm công trình và lệnh dành cho member."
-    />
-    <meta name="theme-color" content="#123e70" />
-    <title>EQUALSURVIVAL | Bảng điểm cộng đồng</title>
+    <title>EQUAL SURVIVAL | Server Minecraft sinh tồn chill</title>
+    <meta name="description" content="EQUAL SURVIVAL: server Minecraft sinh tồn chill, thư thả. Xem cách tham gia, lệnh cho member, bảng xếp hạng Build Points và nội quy." />
+    <meta name="theme-color" content="#7cc7f5" />
+    <meta property="og:title" content="EQUAL SURVIVAL" />
+    <meta property="og:description" content="Server Minecraft sinh tồn chill: xây nhà, trồng trọt, cùng bạn bè thư giãn." />
+    <meta property="og:image" content="assets/favicon.svg" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="tokens.css" />
-    <link rel="stylesheet" href="base.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+    <div class="sky" aria-hidden="true"><span class="cloud cloud-1"></span><span class="cloud cloud-2"></span><span class="cloud cloud-3"></span></div>
+
     <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="#server" data-tab="server" aria-label="EQUALSURVIVAL, trang chủ">
-          EQUALSURVIVAL
-        </a>
-        <nav class="primary-nav" aria-label="Điều hướng chính">
-          <button type="button" data-tab="server" aria-controls="server" aria-current="page">Máy chủ</button>
-          <button type="button" data-tab="rank" aria-controls="rank">Xếp hạng</button>
-          <button type="button" data-tab="rules" aria-controls="rules">Nội quy</button>
-          <button type="button" data-tab="history" aria-controls="history">Lịch sử</button>
-          <button type="button" data-tab="admin" aria-controls="admin">Quản trị</button>
+      <div class="container header-inner">
+        <a class="brand" href="#home"><img src="assets/favicon.svg" alt="" width="36" height="36" /><span class="brand-text">EQUAL SURVIVAL</span></a>
+        <nav class="primary-nav" id="primaryNav" aria-label="Điều hướng chính">
+          <ul>
+            <li><a href="#home">Trang chủ</a></li>
+            <li><a href="#news">Tin tức</a></li>
+            <li><a href="#join">Tham gia</a></li>
+            <li><a href="#commands">Lệnh</a></li>
+            <li><a href="#rank">Xếp hạng</a></li>
+            <li><a href="#gallery">Ảnh</a></li>
+            <li><a href="#feedback">Góp ý</a></li>
+            <li><a href="#rules">Nội quy</a></li>
+          </ul>
         </nav>
+        <div class="header-actions">
+          <button class="btn btn-small btn-gold" id="accountButton" type="button">Đăng nhập</button>
+          <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="primaryNav">MENU</button>
+        </div>
       </div>
     </header>
 
-    <main id="mainContent">
-      <section id="server" class="page-view">
-        <div class="hero-band">
-          <div class="hero-layout page-width">
-            <div class="hero-copy">
-              <h1>Mỗi công trình<br />có một vị trí.</h1>
-              <p class="hero-lead">EQUALSURVIVAL ghi nhận điểm xây dựng và đóng góp của từng builder.</p>
-              <div class="hero-actions">
-                <button class="button button-primary" id="goRank" type="button">Mở bảng xếp hạng</button>
-                <button class="button button-outline" id="copyIP" type="button" disabled>Sao chép địa chỉ</button>
-              </div>
-              <div class="join-line">
-                <span class="field-label">Địa chỉ Java</span>
-                <code id="serverIP">Đang tải địa chỉ…</code>
+    <main id="main" tabindex="-1">
+      <!-- ============ Home ============ -->
+      <section id="home" class="page-view" aria-labelledby="homeTitle">
+        <div class="container hero">
+          <div>
+            <div class="hero-brand">
+              <div class="badge"><img src="assets/logo.svg" alt="" width="124" height="124" /></div>
+              <div>
+                <h1 class="hero-title" id="homeTitle">EQUAL<br />SURVIVAL</h1>
+                <p class="hero-sub">MINECRAFT</p>
               </div>
             </div>
-
-            <aside class="scoreboard-preview" aria-labelledby="previewTitle">
-              <div class="board-heading">
-                <h2 id="previewTitle">Builder dẫn đầu</h2>
-                <span class="data-source">BP từ Supabase</span>
-              </div>
-              <div class="table-scroll">
-                <table>
-                  <thead>
-                    <tr><th scope="col">Hạng</th><th scope="col">Builder</th><th scope="col" class="numeric">BP</th><th scope="col" class="numeric">Lượt chấm</th></tr>
-                  </thead>
-                  <tbody id="rankPreview">
-                    <tr><td colspan="4" class="table-message">Đang tải bảng xếp hạng…</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <button class="text-button" id="goRankFull" type="button">Xem tất cả builder</button>
-            </aside>
+            <p class="hero-lead" id="tagline"></p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" id="heroCopyJava" type="button">Sao chép IP Java</button>
+              <a class="btn" href="#join">Cách tham gia</a>
+            </div>
           </div>
+
+          <aside class="panel status-card" aria-labelledby="statusTitle">
+            <div class="panel-title">
+              <h2 id="statusTitle">Trạng thái server</h2>
+              <span class="status" id="statusPill" data-state="unknown"><span class="status-dot" aria-hidden="true"></span><span id="statusText">Đang kiểm tra…</span></span>
+            </div>
+            <dl class="status-meta">
+              <div><dt>Người chơi</dt><dd id="statusPlayers">-</dd></div>
+              <div><dt>Phiên bản</dt><dd id="statusVersion">-</dd></div>
+            </dl>
+            <div class="address-list">
+              <div class="address"><span class="address-label">Java</span><code id="javaAddress">-</code><button class="btn btn-small" id="copyJava" type="button">Sao chép</button></div>
+              <div class="address"><span class="address-label">Bedrock</span><code id="bedrockAddress">-</code><button class="btn btn-small" id="copyBedrock" type="button">Sao chép</button></div>
+            </div>
+            <p class="muted" id="statusNote" role="status" aria-live="polite"></p>
+          </aside>
         </div>
 
-        <div class="page-width page-flow">
-          <section class="connection-strip" aria-label="Thông tin kết nối">
-            <div><span class="field-label">Phiên bản trong log</span><strong id="serverVersion">Đang tải…</strong></div>
-            <div><span class="field-label">Bedrock</span><strong id="bedrockAddress">Chưa xác minh</strong></div>
-            <div><span class="field-label">Trạng thái</span><strong id="serverStatus">Chưa kiểm tra</strong></div>
-            <button class="button button-outline" id="copyBedrock" type="button">Sao chép Bedrock</button>
+        <div class="ledge" aria-hidden="true"></div>
+
+        <div class="container stack">
+          <section aria-labelledby="whyTitle">
+            <span class="eyebrow">Vì sao chơi ở đây</span>
+            <h2 id="whyTitle">Một góc sinh tồn để thư giãn</h2>
+            <div class="grid-3" id="highlights"></div>
           </section>
 
-          <section class="intro-section" aria-labelledby="serverIntroTitle">
-            <div class="section-heading">
-              <h2 id="serverIntroTitle">Cộng đồng ghi nhận công trình</h2>
-              <p id="serverDescription">Thông tin máy chủ đang được cập nhật.</p>
+          <section aria-labelledby="homeNewsTitle" id="homeNewsSection" class="hide">
+            <div class="panel-title">
+              <h2 id="homeNewsTitle">Tin mới và event</h2>
+              <a class="text-link" href="#news">Xem tất cả</a>
             </div>
-            <div id="serverHighlights" class="highlight-grid"></div>
+            <div class="news-list" id="homeNews"></div>
           </section>
 
-          <section class="leaderboard-section" aria-labelledby="systemTitle">
-            <div class="section-heading section-heading-split">
-              <h2 id="systemTitle">Điểm được chấm theo tiêu chí</h2>
-              <p>Admin lưu từng lượt chấm. Member xem tổng điểm, hạng mục và bằng chứng công trình.</p>
+          <section class="panel" aria-labelledby="topTitle">
+            <div class="panel-title">
+              <h2 id="topTitle">Top 5 builder</h2>
+              <a class="text-link" href="#rank">Xem bảng xếp hạng</a>
             </div>
-            <div class="system-line">
-              <span class="system-mark" aria-hidden="true">BP</span>
-              <p>Bảng BP trên website đang dùng dữ liệu chấm điểm trong Supabase. DirtyLeaderboards có trong log server và hỗ trợ PlaceholderAPI; website hiện chưa có bridge để đọc bảng plugin.</p>
-              <button type="button" class="text-button" data-tab="rules" aria-controls="rules">Xem nội quy và cách tính điểm</button>
-            </div>
-          </section>
-
-          <section class="commands-section" aria-labelledby="commandsTitle">
-            <div class="section-heading section-heading-split">
-              <h2 id="commandsTitle">Lệnh dành cho member</h2>
-              <p id="commandsNote">Lệnh được đối chiếu với plugin trong log. Quyền thực tế còn tùy cấu hình LuckPerms.</p>
-            </div>
-            <div class="command-filters">
-              <label class="visually-hidden" for="commandSearch">Tìm lệnh hoặc công dụng</label>
-              <input id="commandSearch" type="search" placeholder="Tìm lệnh hoặc công dụng" />
-              <label class="visually-hidden" for="commandCategory">Lọc nhóm lệnh</label>
-              <select id="commandCategory">
-                <option value="all">Tất cả nhóm lệnh</option>
-                <option value="Di chuyển">Di chuyển</option>
-                <option value="Nhà">Nhà</option>
-                <option value="Bảo vệ đất">Bảo vệ đất</option>
-                <option value="Tương tác">Tương tác</option>
-              </select>
-            </div>
-            <div id="serverCommands" class="command-list" aria-live="polite"></div>
-            <p class="source-note">Lệnh quản trị của DirtyLeaderboards không nằm trong danh sách member.</p>
-          </section>
-
-          <section class="plugins-section" aria-labelledby="pluginsTitle">
-            <div class="section-heading section-heading-split">
-              <h2 id="pluginsTitle">Plugin tìm thấy trong log</h2>
-              <p>Đây là ảnh chụp cấu hình lúc log được tạo, không phải kiểm tra trạng thái trực tiếp.</p>
-            </div>
-            <div id="serverPlugins" class="plugin-list"></div>
-            <p class="source-note">Nguồn máy chủ: <a href="https://mclo.gs/AYBDv3v" target="_blank" rel="noreferrer">mclo.gs/AYBDv3v</a></p>
-          </section>
-
-          <section class="join-section" aria-labelledby="joinTitle">
-            <div class="section-heading">
-              <h2 id="joinTitle">Bắt đầu tham gia</h2>
-              <p>Sao chép địa chỉ ở đầu trang, sau đó thêm máy chủ trong Minecraft.</p>
-            </div>
-            <ol class="join-steps">
-              <li><strong>Mở Multiplayer</strong><span>Chọn chế độ nhiều người chơi trong Minecraft.</span></li>
-              <li><strong>Thêm máy chủ</strong><span>Dán địa chỉ Java hoặc Bedrock tương ứng.</span></li>
-              <li><strong>Gửi công trình</strong><span>Admin chấm BP theo tiêu chí của website.</span></li>
-            </ol>
-          </section>
-        </div>
-      </section>
-
-      <section id="rank" class="page-view hide">
-        <div class="page-width page-flow">
-          <div class="page-title-row"><div><h1>Bảng xếp hạng</h1><p>Điểm cộng dồn từ các lượt chấm công trình đã lưu.</p></div><span class="data-source">Nguồn: Supabase</span></div>
-          <dl class="summary-grid">
-            <div><dt>Builder</dt><dd id="playersCount">0</dd></div>
-            <div><dt>Lượt chấm</dt><dd id="reviewsCount">0</dd></div>
-            <div><dt>Tổng BP</dt><dd id="totalBP">0</dd></div>
-          </dl>
-          <section class="data-panel" aria-labelledby="rankingTitle">
-            <div class="section-heading section-heading-split"><h2 id="rankingTitle">Thứ hạng theo BP</h2><p>Chọn builder để mở chi tiết từng công trình.</p></div>
-            <div class="table-filters">
-              <label class="visually-hidden" for="search">Tìm tên Minecraft</label>
-              <input id="search" type="search" placeholder="Tìm tên Minecraft…" />
-              <label class="visually-hidden" for="rankCategory">Lọc hạng mục</label>
-              <select id="rankCategory">
-                <option value="all">Tất cả hạng mục</option>
-                <option value="self">Tự Build</option>
-                <option value="litematica">Litematica</option>
-                <option value="assist">Phụ Build</option>
-                <option value="plan">Quy hoạch</option>
-              </select>
-            </div>
-            <div class="table-scroll">
+            <div class="table-wrap">
               <table>
-                <thead><tr><th scope="col">Hạng</th><th scope="col">Người chơi</th><th scope="col" class="numeric">Tổng BP</th><th scope="col" class="numeric">Lượt chấm</th></tr></thead>
-                <tbody id="leaderboard"></tbody>
+                <thead><tr><th scope="col">Hạng</th><th scope="col">Builder</th><th scope="col" class="num">BP</th><th scope="col" class="num">Công trình</th></tr></thead>
+                <tbody id="topFive"><tr><td colspan="4" class="table-message">Đang tải…</td></tr></tbody>
               </table>
             </div>
           </section>
         </div>
       </section>
 
-      <section id="rules" class="page-view hide">
-        <div class="page-width page-flow">
-          <div class="page-title-row"><div><h1>Nội quy EQUALSURVIVAL</h1><p>Giữ thế giới an toàn, công bằng và dễ chơi cùng nhau.</p></div></div>
-          <section class="rules-register" aria-label="Nội quy server">
-            <article class="rule-entry">
-              <span class="rule-number">01</span>
-              <div><h2>Tôn trọng tài sản</h2><p>Không trộm cắp, phá hoại hoặc tự ý lấy đồ từ công trình và khu vực của người chơi khác khi chưa được cho phép.</p><p class="rule-penalty">Xử lý theo mức độ: cảnh cáo, xử phạt hoặc ban.</p></div>
-            </article>
-            <article class="rule-entry">
-              <span class="rule-number">02</span>
-              <div><h2>Không hack, cheat hoặc lợi dụng lỗi</h2><p>Cấm client gian lận, lạm dụng bug, exploit, dupe hoặc cố tình gây lag và mất cân bằng server.</p><p class="rule-penalty">Ban từ 1 đến 3 ngày hoặc vĩnh viễn tùy mức độ.</p></div>
-            </article>
-            <article class="rule-entry">
-              <span class="rule-number">03</span>
-              <div><h2>Giao tiếp có chừng mực</h2><p>Không toxic, xúc phạm, gây war hoặc chửi tục quá mức. Mâu thuẫn nên giải quyết riêng hoặc nhờ Admin, không làm rối cộng đồng.</p><p class="rule-penalty">Có thể bị mute hoặc cảnh cáo tùy mức độ.</p></div>
-            </article>
-            <article class="rule-entry">
-              <span class="rule-number">04</span>
-              <div><h2>Không spam nội dung không phù hợp</h2><p>Không spam tin nhắn, ping, emoji, ảnh hoặc video. Không gửi nội dung NSFW, quảng cáo, kinh doanh hoặc nội dung chống phá nhà nước.</p><p class="rule-penalty">Cảnh cáo hoặc mute; vi phạm nặng có thể bị ban.</p></div>
-            </article>
+      <!-- ============ Join ============ -->
+      <section id="join" class="page-view page hide" aria-labelledby="joinTitle">
+        <div class="container">
+          <div class="page-head">
+            <span class="eyebrow">Tham gia</span>
+            <h1 id="joinTitle">Vào server trong 1 phút</h1>
+            <p>Server hỗ trợ cả Minecraft Java và Bedrock (điện thoại, console, Windows).</p>
+          </div>
+          <div class="grid-2">
+            <section class="panel" aria-labelledby="javaTitle">
+              <h2 id="javaTitle">Minecraft Java</h2>
+              <ol class="steps">
+                <li><span><strong>Mở Minecraft Java</strong>Chọn phiên bản <span id="joinClientVersion">mới nhất</span> trong launcher.</span></li>
+                <li><span><strong>Vào Multiplayer</strong>Bấm "Add Server" (Thêm máy chủ).</span></li>
+                <li><span><strong>Dán địa chỉ</strong>Điền địa chỉ dưới đây rồi bấm Done và Join.</span></li>
+              </ol>
+              <div class="address" style="margin-top: var(--space-4)"><span class="address-label">Địa chỉ</span><code id="joinJava">-</code><button class="btn btn-small" id="joinCopyJava" type="button">Sao chép</button></div>
+            </section>
+            <section class="panel" aria-labelledby="bedrockTitle">
+              <h2 id="bedrockTitle">Minecraft Bedrock</h2>
+              <ol class="steps">
+                <li><span><strong>Mở Minecraft Bedrock</strong>Bấm Play rồi chọn tab Servers.</span></li>
+                <li><span><strong>Thêm server</strong>Kéo xuống dưới cùng, bấm "Add Server".</span></li>
+                <li><span><strong>Điền thông tin</strong>Nhập địa chỉ và cổng dưới đây, lưu lại rồi vào.</span></li>
+              </ol>
+              <div class="address" style="margin-top: var(--space-4)"><span class="address-label">Địa chỉ</span><code id="joinBedrockHost">-</code></div>
+              <div class="address" style="margin-top: var(--space-2)"><span class="address-label">Cổng</span><code id="joinBedrockPort">-</code><button class="btn btn-small" id="joinCopyBedrock" type="button">Sao chép tất cả</button></div>
+            </section>
+          </div>
+          <section class="panel" style="margin-top: var(--space-6)" aria-labelledby="firstTitle">
+            <h2 id="firstTitle">Mới vào thì làm gì?</h2>
+            <ul class="tips">
+              <li>Đọc <a href="#rules">nội quy</a> một chút để cả server cùng chơi vui.</li>
+              <li>Dùng <code>/rtp</code> để tới một vùng đất mới, chọn chỗ ưng ý rồi <code>/sethome</code>.</li>
+              <li>Claim đất để bảo vệ nhà, sau đó <code>/trust</code> bạn bè để cùng xây. Xem thêm ở trang <a href="#commands">Lệnh</a>.</li>
+              <li>Xây xong công trình đẹp? Nhờ admin chấm Build Points để lên <a href="#rank">bảng xếp hạng</a>.</li>
+            </ul>
           </section>
-          <section class="penalty-section" aria-labelledby="penaltyTitle">
+        </div>
+      </section>
+
+      <!-- ============ Commands ============ -->
+      <section id="commands" class="page-view page hide" aria-labelledby="commandsTitle">
+        <div class="container">
+          <div class="page-head">
+            <span class="eyebrow">Lệnh</span>
+            <h1 id="commandsTitle">Lệnh cho member</h1>
+            <p>Bấm "Sao chép" rồi dán vào khung chat trong game.</p>
+          </div>
+          <div class="filters">
+            <label class="visually-hidden" for="commandSearch">Tìm lệnh</label>
+            <input id="commandSearch" type="search" placeholder="Tìm lệnh hoặc công dụng…" />
+            <div class="chips" id="commandChips" role="group" aria-label="Lọc theo nhóm"></div>
+          </div>
+          <div id="commandList" aria-live="polite"></div>
+
+          <section class="panel" id="claim-guide" style="margin-top: var(--space-7)" aria-labelledby="claimTitle">
+            <span class="eyebrow">Bảo vệ đất</span>
+            <h2 id="claimTitle">Hướng dẫn claim nhanh</h2>
+            <ol class="steps">
+              <li><span><strong>Mở hướng dẫn</strong>Gõ <code>/claimhelp</code> để xem giao diện hướng dẫn và thông tin vùng đất của bạn.</span></li>
+              <li><span><strong>Chọn vùng đất</strong>Cầm <b>xẻng vàng</b>, bấm chuột phải vào 2 góc đối diện của khu muốn bảo vệ.</span></li>
+              <li><span><strong>Kiểm tra ranh giới</strong>Cầm <b>que gỗ</b> (stick) và bấm chuột phải để xem viền vùng đất đã claim.</span></li>
+              <li><span><strong>Rủ bạn bè</strong>Dùng <code>/trust &lt;tên&gt;</code> để cho bạn cùng xây, hoặc <code>/containertrust</code> để chỉ cho dùng rương.</span></li>
+              <li><span><strong>Theo dõi block claim</strong><code>/claimslist</code> cho biết bạn còn bao nhiêu block để claim thêm. Chơi càng lâu càng có nhiều block.</span></li>
+            </ol>
+          </section>
+        </div>
+      </section>
+
+      <!-- ============ News & events ============ -->
+      <section id="news" class="page-view page hide" aria-labelledby="newsTitle">
+        <div class="container">
+          <div class="page-head">
+            <span class="eyebrow">Tin tức</span>
+            <h1 id="newsTitle">Thông báo và event</h1>
+            <p>Tin mới từ admin và các sự kiện sắp diễn ra trên server.</p>
+          </div>
+          <div class="chips" id="newsChips" role="group" aria-label="Lọc tin" style="margin-bottom: var(--space-5)">
+            <button class="chip" type="button" data-news="all" aria-pressed="true">Tất cả</button>
+            <button class="chip" type="button" data-news="event" aria-pressed="false">Event</button>
+            <button class="chip" type="button" data-news="news" aria-pressed="false">Thông báo</button>
+          </div>
+          <div class="news-list" id="newsList" aria-live="polite"><p class="table-message">Đang tải…</p></div>
+        </div>
+      </section>
+
+      <!-- ============ Gallery ============ -->
+      <section id="gallery" class="page-view page hide" aria-labelledby="galleryTitle">
+        <div class="container">
+          <div class="page-head page-head-split">
+            <div>
+              <span class="eyebrow">Thư viện ảnh</span>
+              <h1 id="galleryTitle">Khoảnh khắc ở EQUAL SURVIVAL</h1>
+              <p>Ảnh công trình, cảnh đẹp và kỷ niệm do member chia sẻ.</p>
+            </div>
+            <button class="btn btn-primary" id="openUpload" type="button">Đăng ảnh</button>
+          </div>
+          <div class="gallery-grid" id="galleryGrid" aria-live="polite"><p class="table-message">Đang tải…</p></div>
+          <div style="text-align: center; margin-top: var(--space-5)"><button class="btn hide" id="galleryMore" type="button">Xem thêm ảnh</button></div>
+        </div>
+      </section>
+
+      <!-- ============ Feedback ============ -->
+      <section id="feedback" class="page-view page hide" aria-labelledby="feedbackTitle">
+        <div class="container">
+          <div class="page-head page-head-split">
+            <div>
+              <span class="eyebrow">Góp ý</span>
+              <h1 id="feedbackTitle">Báo lỗi và đề xuất</h1>
+              <p>Gặp lỗi hay có ý tưởng hay cho server? Gửi ở đây, admin sẽ phản hồi. Ủng hộ đề xuất bạn thích nhé.</p>
+            </div>
+            <button class="btn btn-primary" id="openTicket" type="button">Gửi góp ý</button>
+          </div>
+          <div class="filters">
+            <div class="chips" id="ticketKindChips" role="group" aria-label="Loại góp ý">
+              <button class="chip" type="button" data-kind="all" aria-pressed="true">Tất cả</button>
+              <button class="chip" type="button" data-kind="bug" aria-pressed="false">Báo lỗi</button>
+              <button class="chip" type="button" data-kind="suggestion" aria-pressed="false">Đề xuất</button>
+            </div>
+            <label class="visually-hidden" for="ticketSort">Sắp xếp</label>
+            <select id="ticketSort">
+              <option value="new">Mới nhất</option>
+              <option value="votes">Nhiều ủng hộ nhất</option>
+              <option value="open">Chưa xử lý trước</option>
+            </select>
+          </div>
+          <div class="ticket-list" id="ticketList" aria-live="polite"><p class="table-message">Đang tải…</p></div>
+        </div>
+      </section>
+
+      <!-- ============ Ranking ============ -->
+      <section id="rank" class="page-view page hide" aria-labelledby="rankTitle">
+        <div class="container">
+          <div class="page-head">
+            <span class="eyebrow">Xếp hạng</span>
+            <h1 id="rankTitle">Bảng xếp hạng Build Points</h1>
+            <p>Điểm cộng dồn từ các công trình đã được admin chấm. Bấm vào tên để xem chi tiết, hoặc xem <a href="#history">lịch sử chấm</a>.</p>
+          </div>
+          <dl class="summary">
+            <div class="panel panel-tight"><dt>Builder</dt><dd id="playersCount">0</dd></div>
+            <div class="panel panel-tight"><dt>Lượt chấm</dt><dd id="reviewsCount">0</dd></div>
+            <div class="panel panel-tight"><dt>Tổng BP</dt><dd id="totalBP">0</dd></div>
+          </dl>
+          <div class="podium" id="podium"></div>
+          <section class="panel" aria-labelledby="rankTableTitle">
+            <h2 id="rankTableTitle" class="visually-hidden">Danh sách xếp hạng</h2>
+            <div class="filters">
+              <label class="visually-hidden" for="rankSearch">Tìm tên Minecraft</label>
+              <input id="rankSearch" type="search" placeholder="Tìm tên Minecraft…" />
+              <label class="visually-hidden" for="rankCategory">Lọc hạng mục</label>
+              <select id="rankCategory"></select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th scope="col">Hạng</th><th scope="col">Builder</th><th scope="col" class="num">Tổng BP</th><th scope="col" class="num">Lượt chấm</th></tr></thead>
+                <tbody id="leaderboard"><tr><td colspan="4" class="table-message">Đang tải…</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ============ History ============ -->
+      <section id="history" class="page-view page hide" aria-labelledby="historyTitle">
+        <div class="container">
+          <div class="page-head">
+            <span class="eyebrow">Lịch sử</span>
+            <h1 id="historyTitle">Lịch sử chấm điểm</h1>
+            <p>Từng công trình đã được chấm, mới nhất ở trên.</p>
+          </div>
+          <section class="panel" aria-labelledby="historyTableTitle">
+            <h2 id="historyTableTitle" class="visually-hidden">Các lượt chấm</h2>
+            <div class="filters">
+              <label class="visually-hidden" for="historySearch">Tìm builder hoặc công trình</label>
+              <input id="historySearch" type="search" placeholder="Tìm builder hoặc công trình…" />
+              <label class="visually-hidden" for="historyCategory">Lọc hạng mục</label>
+              <select id="historyCategory"></select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th scope="col">Ngày</th><th scope="col">Builder</th><th scope="col">Công trình</th><th scope="col">Hạng mục</th><th scope="col" class="num">BP</th><th scope="col"><span class="visually-hidden">Chi tiết</span></th></tr></thead>
+                <tbody id="historyRows"><tr><td colspan="6" class="table-message">Đang tải…</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ============ Rules ============ -->
+      <section id="rules" class="page-view page hide" aria-labelledby="rulesTitle">
+        <div class="container stack">
+          <div class="page-head" style="margin: 0">
+            <span class="eyebrow">Nội quy</span>
+            <h1 id="rulesTitle">Cùng nhau giữ server dễ chịu</h1>
+            <p>Vài điều nhỏ để ai cũng chơi vui và an toàn.</p>
+          </div>
+          <div class="grid-2">
+            <article class="panel rule"><span class="rule-number">01</span><div><h2>Tôn trọng tài sản</h2><p>Không trộm cắp, phá hoại hoặc tự ý lấy đồ từ công trình và khu vực của người chơi khác khi chưa được cho phép.</p><p class="rule-penalty">Xử lý theo mức độ: cảnh cáo, xử phạt hoặc ban.</p></div></article>
+            <article class="panel rule"><span class="rule-number">02</span><div><h2>Không hack, cheat hoặc lợi dụng lỗi</h2><p>Cấm client gian lận, lạm dụng bug, exploit, dupe hoặc cố tình gây lag và mất cân bằng server.</p><p class="rule-penalty">Ban từ 1 đến 3 ngày hoặc vĩnh viễn tùy mức độ.</p></div></article>
+            <article class="panel rule"><span class="rule-number">03</span><div><h2>Giao tiếp có chừng mực</h2><p>Không toxic, xúc phạm, gây war hoặc chửi tục quá mức. Mâu thuẫn nên giải quyết riêng hoặc nhờ Admin, không làm rối cộng đồng.</p><p class="rule-penalty">Có thể bị mute hoặc cảnh cáo tùy mức độ.</p></div></article>
+            <article class="panel rule"><span class="rule-number">04</span><div><h2>Không spam nội dung không phù hợp</h2><p>Không spam tin nhắn, ping, emoji, ảnh hoặc video. Không gửi nội dung NSFW, quảng cáo, kinh doanh hoặc nội dung chống phá nhà nước.</p><p class="rule-penalty">Cảnh cáo hoặc mute; vi phạm nặng có thể bị ban.</p></div></article>
+          </div>
+          <section class="panel" aria-labelledby="penaltyTitle">
             <h2 id="penaltyTitle">Hệ thống xử phạt</h2>
-            <ol class="penalty-list">
+            <ol class="tips">
               <li>Vi phạm thông thường có thể nhận tối đa ba lần cảnh cáo.</li>
               <li>Tái phạm sau cảnh cáo có thể bị ban.</li>
               <li>Vi phạm nặng có thể bị ban ngay.</li>
               <li>Hình phạt dựa trên mức độ và lịch sử vi phạm.</li>
             </ol>
           </section>
-          <section class="data-panel rubric-panel" aria-labelledby="rubricTitle">
-            <div class="section-heading section-heading-split"><h2 id="rubricTitle">Cách tính Build Points</h2><p>Mỗi hạng mục có thang điểm và tiêu chí riêng.</p></div>
-            <div id="rulesContent"></div>
-            <div class="policy-copy">
-              <h2>Quy định chấm điểm</h2>
-              <ol>
-                <li>Công trình chính chọn Tự Build hoặc Litematica.</li>
-                <li>Không gửi công trình lặp lại để farm điểm.</li>
-                <li>Không tính lại phần việc đã được chấm điểm.</li>
-                <li>Nâng cấp chỉ nhận điểm cho phần giá trị tăng thêm.</li>
-                <li>Điểm dự án nhóm chia theo đóng góp thực tế.</li>
-                <li>Admin có thể yêu cầu bằng chứng hoặc kiểm tra trực tiếp.</li>
-              </ol>
-            </div>
+          <section aria-labelledby="rubricTitle">
+            <span class="eyebrow">Build Points</span>
+            <h2 id="rubricTitle">Cách tính Build Points</h2>
+            <div class="grid-2 rubric" id="rubric"></div>
+          </section>
+          <section class="panel" aria-labelledby="policyTitle">
+            <h2 id="policyTitle">Quy định chấm điểm</h2>
+            <ol class="tips">
+              <li>Công trình chính chọn Tự Build hoặc Litematica.</li>
+              <li>Không gửi công trình lặp lại để farm điểm.</li>
+              <li>Không tính lại phần việc đã được chấm điểm.</li>
+              <li>Nâng cấp chỉ nhận điểm cho phần giá trị tăng thêm.</li>
+              <li>Điểm dự án nhóm chia theo đóng góp thực tế.</li>
+              <li>Admin có thể yêu cầu bằng chứng hoặc kiểm tra trực tiếp.</li>
+            </ol>
           </section>
         </div>
       </section>
-
-      <section id="history" class="page-view hide">
-        <div class="page-width page-flow">
-          <div class="page-title-row"><div><h1>Lịch sử chấm điểm</h1><p>Xem công trình, hạng mục và điểm đã ghi nhận.</p></div></div>
-          <section class="data-panel" aria-labelledby="historyTitle">
-            <h2 id="historyTitle">Các lượt chấm gần đây</h2>
-            <div class="table-filters">
-              <label class="visually-hidden" for="historySearch">Tìm builder hoặc công trình</label>
-              <input id="historySearch" type="search" placeholder="Tìm builder hoặc công trình" />
-              <label class="visually-hidden" for="historyCategory">Lọc hạng mục lịch sử</label>
-              <select id="historyCategory">
-                <option value="all">Tất cả hạng mục</option>
-                <option value="self">Tự Build</option>
-                <option value="litematica">Litematica</option>
-                <option value="assist">Phụ Build</option>
-                <option value="plan">Quy hoạch</option>
-              </select>
-            </div>
-            <div class="table-scroll">
-              <table>
-                <thead><tr><th scope="col">Ngày</th><th scope="col">Builder</th><th scope="col">Công trình</th><th scope="col">Hạng mục</th><th scope="col" class="numeric">BP</th><th scope="col">Chi tiết</th></tr></thead>
-                <tbody id="historyRows"></tbody>
-              </table>
-            </div>
-          </section>
-        </div>
-      </section>
-
-      <section id="admin" class="page-view hide">
-        <div class="page-width page-flow admin-layout">
-          <div class="page-title-row"><div><h1>Khu vực quản trị</h1><p>Đăng nhập để chấm điểm và quản lý kết quả.</p></div></div>
-          <div id="authStatus" class="notice" role="status" aria-live="polite">Đang kiểm tra kết nối…</div>
-          <section id="loginArea" class="data-panel login-panel" aria-label="Đăng nhập quản trị">
-            <label for="email">Email Admin</label>
-            <input id="email" type="email" autocomplete="username" placeholder="admin@example.com" />
-            <label for="password">Mật khẩu</label>
-            <input id="password" type="password" autocomplete="current-password" placeholder="Mật khẩu Supabase" />
-            <button class="button button-primary" id="login" type="button">Đăng nhập</button>
-          </section>
-          <section id="adminArea" class="data-panel hide" aria-label="Công cụ chấm điểm">
-            <div class="admin-toolbar"><button class="button button-outline" id="logout" type="button">Đăng xuất</button><button class="button button-outline" id="exportCSV" type="button">Xuất lịch sử CSV</button></div>
-            <h2>Chấm công trình</h2>
-            <label for="player">Tên người chơi Minecraft</label>
-            <input id="player" maxlength="32" autocomplete="off" placeholder="Ví dụ: Builder123" />
-            <label for="project">Tên công trình hoặc dự án</label>
-            <input id="project" maxlength="120" autocomplete="off" placeholder="Tên công trình" />
-            <label for="category">Hạng mục</label>
-            <select id="category"></select>
-            <div id="criteriaForm" class="criteria-form"></div>
-            <div id="scorePreview" class="score-preview"></div>
-            <p class="score-total">Tổng điểm <strong id="score">0</strong> / <span id="maxScore">10</span> BP</p>
-            <label for="note">Ghi chú hoặc link bằng chứng</label>
-            <textarea id="note" rows="3" placeholder="Mô tả đóng góp hoặc link ảnh"></textarea>
-            <button class="button button-primary" id="save" type="button">Lưu lượt chấm</button>
-            <p id="saveStatus" class="form-status" role="status" aria-live="polite"></p>
-            <h2>Kết quả đã lưu</h2>
-            <div id="manageRows" class="manage-rows"></div>
-          </section>
-        </div>
-      </section>
-
-      <div id="detailModal" class="modal-shell hide" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
-        <div class="modal-inner">
-          <button class="button button-outline" id="closeDetail" type="button">Đóng chi tiết</button>
-          <div id="detailBody"></div>
-        </div>
-      </div>
     </main>
 
+    <div id="detailModal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <div class="panel modal-card">
+        <div class="modal-head"><div id="detailBody"></div><button class="btn btn-small" id="closeDetail" type="button">Đóng</button></div>
+      </div>
+    </div>
+
+    <!-- Account: sign in / sign up with Minecraft name + password -->
+    <dialog class="panel dialog" id="accountDialog" aria-labelledby="accountTitle">
+      <div class="modal-head"><h2 id="accountTitle">Tài khoản</h2><button class="btn btn-small" type="button" data-close>Đóng</button></div>
+      <div id="accountSignedOut">
+        <div class="chips" role="tablist" aria-label="Chọn" style="margin-bottom: var(--space-4)">
+          <button class="chip" type="button" role="tab" id="tabLogin" aria-selected="true" aria-pressed="true">Đăng nhập</button>
+          <button class="chip" type="button" role="tab" id="tabRegister" aria-selected="false" aria-pressed="false">Tạo tài khoản</button>
+        </div>
+        <form id="accountForm" novalidate>
+          <div class="field">
+            <label for="accName">Tên Minecraft</label>
+            <input id="accName" type="text" autocomplete="username" maxlength="16" required aria-describedby="accNameHint" />
+            <span class="field-hint" id="accNameHint">3 đến 16 ký tự: chữ, số hoặc dấu gạch dưới. Đây cũng là tên hiện trên web.</span>
+          </div>
+          <div class="field">
+            <label for="accPass">Mật khẩu</label>
+            <input id="accPass" type="password" autocomplete="current-password" minlength="8" required aria-describedby="accPassHint" />
+            <span class="field-hint" id="accPassHint">Ít nhất 8 ký tự. Không dùng lại mật khẩu Minecraft hay email.</span>
+          </div>
+          <div class="field hide" id="accPass2Field">
+            <label for="accPass2">Nhập lại mật khẩu</label>
+            <input id="accPass2" type="password" autocomplete="new-password" minlength="8" />
+          </div>
+          <button class="btn btn-primary" id="accountSubmit" type="submit">Đăng nhập</button>
+          <p class="form-status" id="accountStatus" role="status" aria-live="polite"></p>
+          <p class="field-hint">Quên mật khẩu? Nhắn admin để được đặt lại.</p>
+        </form>
+      </div>
+      <div id="accountSignedIn" class="hide">
+        <p>Xin chào <b id="accountName"></b>!</p>
+        <p class="field-hint">Tên tự khai, admin có thể chỉnh nếu có nhầm lẫn.</p>
+        <div class="filters" style="margin: 0">
+          <a class="btn" href="#gallery" data-close>Ảnh của tôi</a>
+          <a class="btn" href="#feedback" data-close>Góp ý của tôi</a>
+          <button class="btn btn-danger" type="button" id="signOut">Đăng xuất</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Upload a gallery image -->
+    <dialog class="panel dialog" id="uploadDialog" aria-labelledby="uploadTitle">
+      <div class="modal-head"><h2 id="uploadTitle">Đăng ảnh</h2><button class="btn btn-small" type="button" data-close>Đóng</button></div>
+      <form id="uploadForm" novalidate>
+        <div class="field">
+          <label for="upFile">Chọn ảnh</label>
+          <input id="upFile" type="file" accept="image/png,image/jpeg,image/webp" required aria-describedby="upFileHint" />
+          <span class="field-hint" id="upFileHint">PNG, JPG hoặc WebP. Ảnh tự được thu nhỏ trước khi tải lên. Tối đa 5 ảnh mỗi ngày.</span>
+        </div>
+        <img id="upPreview" class="upload-preview hide" alt="Xem trước ảnh" />
+        <div class="field"><label for="upTitle">Tiêu đề</label><input id="upTitle" type="text" maxlength="80" required /></div>
+        <div class="field"><label for="upCaption">Mô tả (không bắt buộc)</label><textarea id="upCaption" rows="2" maxlength="500"></textarea></div>
+        <button class="btn btn-primary" id="upSubmit" type="submit">Đăng ảnh</button>
+        <p class="form-status" id="upStatus" role="status" aria-live="polite"></p>
+      </form>
+    </dialog>
+
+    <!-- Bug report / suggestion -->
+    <dialog class="panel dialog" id="ticketDialog" aria-labelledby="ticketTitle">
+      <div class="modal-head"><h2 id="ticketTitle">Gửi góp ý</h2><button class="btn btn-small" type="button" data-close>Đóng</button></div>
+      <form id="ticketForm" novalidate>
+        <fieldset class="field" style="border: 0; padding: 0">
+          <legend style="font-weight: 600; margin-bottom: var(--space-2)">Loại góp ý</legend>
+          <div class="chips">
+            <label class="chip radio-chip"><input type="radio" name="tkKind" value="bug" checked /> Báo lỗi</label>
+            <label class="chip radio-chip"><input type="radio" name="tkKind" value="suggestion" /> Đề xuất</label>
+          </div>
+        </fieldset>
+        <div class="field"><label for="tkTitle">Tiêu đề</label><input id="tkTitle" type="text" maxlength="120" required /></div>
+        <div class="field">
+          <label for="tkBody">Nội dung</label>
+          <textarea id="tkBody" rows="5" maxlength="3000" required aria-describedby="tkBodyHint"></textarea>
+          <span class="field-hint" id="tkBodyHint">Báo lỗi: ghi rõ chuyện gì xảy ra, ở đâu (tọa độ), lúc nào.</span>
+        </div>
+        <label class="check-row" id="tkPrivateRow"><input type="checkbox" id="tkPrivate" /> Đây là lỗi khai thác (dupe, hack, bug lợi dụng): chỉ admin xem</label>
+        <button class="btn btn-primary" id="tkSubmit" type="submit">Gửi</button>
+        <p class="form-status" id="tkStatus" role="status" aria-live="polite"></p>
+      </form>
+    </dialog>
+
     <footer class="site-footer">
-      <div class="page-width footer-inner"><strong>EQUALSURVIVAL</strong><span>Bảng điểm cộng đồng</span><a href="https://github.com/Zerep231/DirtyLeaderboards" target="_blank" rel="noreferrer">DirtyLeaderboards</a></div>
+      <div class="container footer-inner">
+        <span class="footer-brand">EQUAL SURVIVAL</span>
+        <span>Server Minecraft sinh tồn chill</span>
+        <a href="#rules">Nội quy</a>
+      </div>
     </footer>
 
-    <script src="config.js"></script>
-    <script src="server-config.js"></script>
-    <script src="server.js"></script>
-    <script type="module" src="app.js"></script>
+    <script type="module" src="js/main.js"></script>
   </body>
 </html>

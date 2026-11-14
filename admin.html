@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Quản trị | EQUAL SURVIVAL</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html"><img src="assets/favicon.svg" alt="" width="36" height="36" /><span class="brand-text">EQUAL SURVIVAL</span></a>
+        <a class="btn btn-small" href="index.html">Trang chính</a>
+      </div>
+    </header>
+
+    <main id="main" class="page">
+      <div class="container stack">
+        <div class="page-head" style="margin: 0">
+          <span class="eyebrow">Quản trị</span>
+          <h1>Chấm Build Points</h1>
+          <p>Đăng nhập bằng tài khoản admin Supabase để chấm và quản lý điểm.</p>
+        </div>
+
+        <div id="authStatus" class="notice" role="status" aria-live="polite">Đang kiểm tra kết nối…</div>
+
+        <section id="loginArea" class="panel hide" aria-labelledby="loginTitle" style="max-width: 28rem">
+          <h2 id="loginTitle">Đăng nhập</h2>
+          <form id="loginForm" novalidate>
+            <div class="field"><label for="email">Email admin</label><input id="email" type="email" autocomplete="username" required /></div>
+            <div class="field"><label for="password">Mật khẩu</label><input id="password" type="password" autocomplete="current-password" required /></div>
+            <button class="btn btn-primary" id="login" type="submit">Đăng nhập</button>
+          </form>
+        </section>
+
+        <div id="adminArea" class="stack hide">
+          <div class="filters" style="margin: 0; justify-content: space-between">
+            <div class="tabs" role="tablist" aria-label="Khu vực quản trị" id="adminTabs" style="margin: 0">
+              <button class="chip" type="button" role="tab" data-tab="bp" aria-selected="true" aria-pressed="true">Chấm BP</button>
+              <button class="chip" type="button" role="tab" data-tab="news" aria-selected="false" aria-pressed="false">Thông báo &amp; Event</button>
+              <button class="chip" type="button" role="tab" data-tab="photos" aria-selected="false" aria-pressed="false">Duyệt ảnh <span id="photoBadge"></span></button>
+              <button class="chip" type="button" role="tab" data-tab="tickets" aria-selected="false" aria-pressed="false">Góp ý <span id="ticketBadge"></span></button>
+              <button class="chip" type="button" role="tab" data-tab="players" aria-selected="false" aria-pressed="false">Người chơi</button>
+            </div>
+            <button class="btn btn-small" id="logout" type="button">Đăng xuất</button>
+          </div>
+
+          <!-- ===== Announcements & events ===== -->
+          <div class="stack hide" data-panel="news">
+            <section class="panel" aria-labelledby="annTitle">
+              <h2 id="annTitle">Đăng thông báo hoặc event</h2>
+              <form id="annForm" novalidate>
+                <input type="hidden" id="annId" />
+                <div class="grid-2" style="gap: 0 var(--space-5)">
+                  <div class="field"><label for="annKind">Loại</label>
+                    <select id="annKind"><option value="news">Thông báo</option><option value="event">Event</option></select></div>
+                  <div class="field"><label for="annTitleInput">Tiêu đề</label><input id="annTitleInput" type="text" maxlength="120" required /></div>
+                </div>
+                <div class="field"><label for="annBody">Nội dung</label><textarea id="annBody" rows="5" maxlength="5000"></textarea></div>
+                <div class="field"><label for="annCover">Link ảnh bìa (https://…, không bắt buộc)</label><input id="annCover" type="text" inputmode="url" /></div>
+                <div class="grid-2 hide" id="annEventTimes" style="gap: 0 var(--space-5)">
+                  <div class="field"><label for="annStart">Bắt đầu</label><input id="annStart" type="datetime-local" /></div>
+                  <div class="field"><label for="annEnd">Kết thúc (không bắt buộc)</label><input id="annEnd" type="datetime-local" /></div>
+                </div>
+                <label class="check-row"><input type="checkbox" id="annPinned" /> Ghim lên trang chủ</label>
+                <div class="filters" style="margin: 0">
+                  <button class="btn btn-primary" id="annSave" type="submit">Đăng</button>
+                  <button class="btn hide" id="annCancel" type="button">Hủy sửa</button>
+                </div>
+                <p class="form-status" id="annStatus" role="status" aria-live="polite"></p>
+              </form>
+            </section>
+            <section class="panel" aria-labelledby="annListTitle">
+              <h2 id="annListTitle">Đã đăng</h2>
+              <div id="annRows"></div>
+            </section>
+          </div>
+
+          <!-- ===== Photo moderation ===== -->
+          <div class="stack hide" data-panel="photos">
+            <section class="panel" aria-labelledby="photoTitle">
+              <div class="panel-title">
+                <h2 id="photoTitle">Duyệt ảnh</h2>
+                <label class="check-row" style="margin: 0"><input type="checkbox" id="photoOnlyFlagged" checked /> Chỉ ảnh bị báo cáo hoặc đang ẩn</label>
+              </div>
+              <div class="gallery-grid" id="photoRows"></div>
+            </section>
+          </div>
+
+          <!-- ===== Tickets ===== -->
+          <div class="stack hide" data-panel="tickets">
+            <section class="panel" aria-labelledby="tkAdminTitle">
+              <div class="panel-title">
+                <h2 id="tkAdminTitle">Báo lỗi và đề xuất</h2>
+                <label class="visually-hidden" for="tkFilter">Lọc trạng thái</label>
+                <select id="tkFilter" style="max-width: 16rem">
+                  <option value="open">Chưa xong (Mới + Đang xử lý)</option>
+                  <option value="all">Tất cả</option>
+                  <option value="done">Đã xong</option>
+                  <option value="rejected">Không thực hiện</option>
+                </select>
+              </div>
+              <div class="ticket-list" id="tkRows"></div>
+            </section>
+          </div>
+
+          <!-- ===== Players ===== -->
+          <div class="stack hide" data-panel="players">
+            <section class="panel" aria-labelledby="plTitle">
+              <div class="panel-title">
+                <h2 id="plTitle">Người chơi đã đăng ký</h2>
+                <label class="visually-hidden" for="plSearch">Tìm người chơi</label>
+                <input id="plSearch" type="search" placeholder="Tìm tên…" style="max-width: 20rem" />
+              </div>
+              <p class="field-hint">Đổi tên khi có người khai nhầm tên của người khác. Khóa tài khoản để chặn đăng ảnh, góp ý và ủng hộ. Đặt lại mật khẩu: Supabase → Authentication → Users.</p>
+              <div id="plRows"></div>
+            </section>
+          </div>
+
+          <div class="stack" data-panel="bp">
+          <div class="filters" style="margin: 0"><button class="btn" id="exportCSV" type="button">Xuất lịch sử CSV</button></div>
+          <section class="panel" aria-labelledby="scoreTitle">
+            <h2 id="scoreTitle">Chấm công trình</h2>
+            <form id="scoreForm" novalidate>
+              <div class="grid-2" style="gap: 0 var(--space-5)">
+                <div class="field">
+                  <label for="player">Tên Minecraft của builder</label>
+                  <input id="player" type="text" maxlength="16" autocomplete="off" aria-describedby="playerHint" />
+                  <span class="field-hint" id="playerHint">3 đến 16 ký tự: chữ, số hoặc dấu gạch dưới.</span>
+                </div>
+                <div class="field">
+                  <label for="project">Tên công trình hoặc dự án</label>
+                  <input id="project" type="text" maxlength="120" autocomplete="off" />
+                </div>
+              </div>
+              <div class="field" style="max-width: 20rem">
+                <label for="category">Hạng mục</label>
+                <select id="category"></select>
+              </div>
+              <fieldset class="field" style="border: 0; padding: 0; margin: 0 0 var(--space-4)">
+                <legend style="font-weight: 600; margin-bottom: var(--space-2)">Điểm từng tiêu chí (bước 0.5)</legend>
+                <div class="criteria-grid" id="criteriaForm"></div>
+              </fieldset>
+              <div id="scorePreview"></div>
+              <p class="score-total">Tổng điểm <strong id="score">0</strong> / <span id="maxScore">10</span> BP</p>
+              <div class="field">
+                <label for="note">Nhận xét hoặc link bằng chứng</label>
+                <textarea id="note" rows="3"></textarea>
+              </div>
+              <button class="btn btn-primary" id="save" type="submit">Lưu lượt chấm</button>
+              <p id="saveStatus" class="form-status" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="panel" aria-labelledby="manageTitle">
+            <div class="panel-title">
+              <h2 id="manageTitle">Kết quả đã lưu</h2>
+              <label class="visually-hidden" for="manageSearch">Tìm lượt chấm</label>
+              <input id="manageSearch" type="search" placeholder="Tìm builder hoặc công trình…" style="max-width: 20rem" />
+            </div>
+            <div id="manageRows"></div>
+          </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="js/admin.js"></script>
+  </body>
+</html>
